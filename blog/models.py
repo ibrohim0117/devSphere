@@ -43,3 +43,5 @@ class Post(BaseCreatedModel):
     imoji = models.ForeignKey(Emoji, on_delete=models.CASCADE, related_name='posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
 
+    def __str__(self):
+        return self.title
