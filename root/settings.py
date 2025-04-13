@@ -39,8 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # my apps
     'blog',
-    'users'
+    'users',
+
+    # install apps
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
