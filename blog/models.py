@@ -41,7 +41,6 @@ class Post(BaseCreatedModel):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
-    # content = models.TextField()
     content = fields.RichTextField()
     image = models.ImageField(upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
     video = models.FileField(upload_to='posts/video/%Y/%m/%d', null=True, blank=True)
