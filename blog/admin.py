@@ -6,3 +6,21 @@ from .models import Category, Post, Tag, Emoji
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
     search_fields = ('name',)
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'author', 'category')
+    search_fields = ('title',)
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ('name',)
+
+
+@admin.register(Emoji)
+class EmojiAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ('name',)

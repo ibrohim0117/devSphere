@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 
+from root import settings
+
+
 class BaseCreatedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -39,9 +42,11 @@ class Post(BaseCreatedModel):
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     content = models.TextField()
+    image = models.ImageField(upload_to='posts/%Y/%m/%d', null=True, blank=True)
     views = models.PositiveIntegerField(default=0, editable=False)
     imoji = models.ForeignKey(Emoji, on_delete=models.CASCADE, related_name='posts')
     tags = models.ManyToManyField(Tag, related_name='posts')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
 
     def __str__(self):
         return self.title
