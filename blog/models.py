@@ -45,9 +45,14 @@ class Post(BaseCreatedModel):
     image = models.ImageField(upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
     video = models.FileField(upload_to='posts/video/%Y/%m/%d', null=True, blank=True)
     views = models.PositiveIntegerField(default=0, editable=False)
-    imoji = models.ForeignKey(Emoji, on_delete=models.CASCADE, related_name='posts')
+    emoji = models.ForeignKey(Emoji, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='posts')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
 
     def __str__(self):
         return self.title
+
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
