@@ -117,24 +117,26 @@
 				</div>
 			</div>
         
-        <<div class="row">
+        <div class="row">
+        
     {% for post in posts %}
         <div class="col-lg-6 mb-4">
     <div class="single-travel pb-70 position-relative">
         <div class="image-wrapper position-relative">
+        
             {% if post.image.url %}
-                <img class="img-fluid w-100" src="{{ post.image.url }}" alt="">
+            <img class="img-fluid w-100" src="{{ post.image.url }}" alt="" style="height: 250px; object-fit: cover;">
             {% else %}
-                <img class="img-fluid w-100" src="{% static 'img/t1.jpg' %}" alt="">
+            <img class="img-fluid w-100" src="{% static 'img/t1.jpg' %}" alt="" style="height: 250px; object-fit: cover;">
             {% endif %}
-
+        
             <div class="dates position-absolute top-0 start-0 bg-dark text-white text-center p-2">
             </div>
         </div>
 
         <div class="media-body align-self-center mt-3">
-            <h4 class="mt-0"><a href="#">Addiction When Gambling Becomes A Problem</a></h4>
-            <p>inappropriate behavior Lorem ipsum dolor sit amet, consectetur.</p>
+            <h4 class="mt-0"><a href="#">{{ post.title }}</a></h4>
+            <p>{{ post.content|truncatewords:30|safe }}</p>
             <div class="meta-bottom d-flex justify-content-between">
                 <p><span class="lnr lnr-heart"></span> 15 Likes</p>
                 <p><span class="lnr lnr-bubble"></span> 02 Comments</p>
@@ -144,7 +146,8 @@
 </div>
 
     {% endfor %}
-</div>
+        
+        </div>
 
         
         
