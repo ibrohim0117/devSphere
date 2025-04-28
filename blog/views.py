@@ -20,18 +20,28 @@ class IndexView(ListView):
         return data
 
 
+from django.utils import timezone
+from datetime import timedelta
+
+
 class SingleView(DetailView):
     model = Post
     template_name = 'single.html'
     context_object_name = 'post'
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         categories = Category.objects.all()
-        data = {
-            'post': Post.objects.filter(slug=self.kwargs['slug']).first(),
+        post = Post.objects.filter(slug=self.kwargs['slug']).first()
+
+        if post:
+            post.created_at_plus_5 = post.created_at + timedelta(hours=5)
+
+        context.update({
+            'post': post,
             'categories': categories,
-        }
-        return data
+        })
+        return context
 
 
 class ArchiveView(TemplateView):
