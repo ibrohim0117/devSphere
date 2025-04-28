@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import (
-    TemplateView, ListView
+    TemplateView, ListView, DetailView
 )
 
 from blog.models import Post
@@ -11,9 +11,19 @@ class IndexView(ListView):
     model = Post
     context_object_name = 'posts'
 
+    def get_context_data(self, **kwargs):
+        data = Post.objects.all().order_by('-views')
+        data = {
+            'posts': Post.objects.all(),
+            'top_posts': data,
+        }
+        return data
 
-class SingleView(TemplateView):
+
+class SingleView(DetailView):
+    model = Post
     template_name = 'single.html'
+    context_object_name = 'post'
 
 
 class ArchiveView(TemplateView):
