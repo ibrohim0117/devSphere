@@ -324,41 +324,40 @@
                         </div>
 
                         <div class="single_widget about_widget">
-                            <img src="{% static 'img/asset/s-img.jpg' %}" alt="">
-                            <h2 class="text-uppercase">Adele Gonzalez</h2>
+                        {% if post.author.avatar %}
+                            <img width="300px" src="{{ post.author.avatar.url }}" alt="">
+                        {% else %}
+                            <img width="300px" src="{% static 'img/asset/s-img.jpg' %}" alt="">
+                        {% endif %}
+                        
+                            <h2 class="text-uppercase">{{ post.author }} ({{ post.author.first_name }}) </h2>
+                        
+                            {% if post.author.about %}
                             <p>
-                                MCSE boot camps have its supporters and
-                                its detractors. Some people do not understand why you should have to spend money
+                                {{ post.author.about }}
                             </p>
+                            {% else %}
+                            <p>
+                                Salom! Men IT sohasida o‘z bilimlarim va tajribamni boshqalar bilan ulashishni yaxshi ko‘raman.
+                                Ushbu blogda siz dasturlash, texnologiyalar va zamonaviy IT yangiliklari haqida qiziqarli va
+                                foydali ma'lumotlar topasiz.
+                            </p>
+                            {% endif %}
                             <div class="social-link">
                                 <a href="#"><button class="btn"><i class="fa fa-facebook" aria-hidden="true"></i> Like</button></a>
                                 <a href="#"><button class="btn"><i class="fa fa-twitter" aria-hidden="true"></i> follow</button></a>
                             </div>
                         </div>
                         <div class="single_widget cat_widget">
-                            <h4 class="text-uppercase pb-20">post categories</h4>
+                            <h4 class="text-uppercase pb-20">Ruknlar</h4>
                             <ul>
+                                
+                                {% for category in categories %}
                                 <li>
-                                    <a href="#">Technology <span>37</span></a>
+                                    <a href="#">{{ category.name }} <span>{{ category.posts.count }}</span></a>
                                 </li>
-                                <li>
-                                    <a href="#">Lifestyle <span>37</span></a>
-                                </li>
-                                <li>
-                                    <a href="#">Fashion <span>37</span></a>
-                                </li>
-                                <li>
-                                    <a href="#">Art <span>37</span></a>
-                                </li>
-                                <li>
-                                    <a href="#">Food <span>37</span></a>
-                                </li>
-                                <li>
-                                    <a href="#">Architecture <span>37</span></a>
-                                </li>
-                                <li>
-                                    <a href="#">Adventure <span>37</span></a>
-                                </li>                                
+                                {% endfor %}
+                                                              
                             </ul>
                         </div>
 

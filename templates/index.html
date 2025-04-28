@@ -110,9 +110,13 @@
 			<div class="row d-flex justify-content-center">
 				<div class="menu-content pb-70 col-lg-8">
 					<div class="title text-center">
-						<h1 class="mb-10">Hot topics from Travel Section</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.</p>
+						<h1 class="mb-10">Tech Nomad: IT Dunyosi va Digital Sayohatlar</h1>
+						<p>"Tech Nomad" — bu IT olamidagi eng so‘nggi texnologiyalar, dasturlash,
+                        startap yangiliklari va raqamli sayohat (digital nomad life) tarzi haqida
+                        blog. Har bir postda IT trendlaridan tortib, masofadan ishlash
+                        imkoniyatlari, yangi texnologiyalar sharhi va global raqamli hayot
+                        madaniyatini o‘rganamiz. Agar siz ham IT va erkin hayotni orzu qilsangiz,
+                        bu blog aynan siz uchun!</p>
 					</div>
 				</div>
 			</div>
@@ -135,7 +139,7 @@
         </div>
 
         <div class="media-body align-self-center mt-3">
-            <h4 class="mt-0"><a href="#">{{ post.title }}</a></h4>
+            <h4 class="mt-0"><a href="{% url 'single' post.slug %}">{{ post.title }}</a></h4>
             <p>{{ post.content|truncatewords:30|safe }}</p>
             <div class="meta-bottom d-flex justify-content-between">
                 <p><span class="lnr lnr-heart"></span> 15 Likes</p>
@@ -168,8 +172,13 @@
 				</div>
 			</div>
 			<div class="row">
+                {% for top in top_posts %}
 				<div class="col-lg-3 col-md-6 single-fashion">
+                {% if top.image %}
+					<img class="img-fluid" src="{{ top.image.url }}" alt="">
+                {% else %}
 					<img class="img-fluid" src="{% static 'img/f1.jpg' %}" alt="">
+                {% endif %}
 					<p class="date">10 Jan 2018</p>
 					<h4><a href="#">Addiction When Gambling
 							Becomes A Problem</a></h4>
@@ -181,6 +190,7 @@
 						<p><span class="lnr lnr-bubble"></span> 02 Comments</p>
 					</div>
 				</div>
+                {% endfor %}
 				
 				<a href="#" class="primary-btn load-more pbtn-2 text-uppercase mx-auto mt-60">Load More </a>
 			</div>

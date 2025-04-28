@@ -3,7 +3,7 @@ from django.views.generic import (
     TemplateView, ListView, DetailView
 )
 
-from blog.models import Post
+from blog.models import Post, Category
 
 
 class IndexView(ListView):
@@ -24,6 +24,14 @@ class SingleView(DetailView):
     model = Post
     template_name = 'single.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        categories = Category.objects.all()
+        data = {
+            'post': Post.objects.filter(slug=self.kwargs['slug']).first(),
+            'categories': categories,
+        }
+        return data
 
 
 class ArchiveView(TemplateView):
