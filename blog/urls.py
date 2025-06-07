@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     IndexView, SingleView, ArchiveView,
     CategoryView, ElementsView, GenericsView,
-    SearchView
+    SearchView, HomeView
 )
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     path('elements/', ElementsView.as_view(), name='elements'),
     path('generics/', GenericsView.as_view(), name='generics'),
     path('search/', SearchView.as_view(), name='search'),
+    path('home/', HomeView.as_view(), name='home'),
 
 ]

@@ -48,6 +48,10 @@ class ArchiveView(TemplateView):
     template_name = 'archive.html'
 
 
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+
 class CategoryView(TemplateView):
     template_name = 'category.html'
 

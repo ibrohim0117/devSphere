@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blog Sayti</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: aqua;
+        color: #333;
+    }
+    header {
+        background-color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10px;
+        margin: 10px 20px 0 20px;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+    header input[type="search"] {
+        padding: 7px 12px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 200px;
+    }
+
+    main {
+        display: flex;
+        max-width: 1200px;
+        margin: 20px auto;
+        gap: 20px;
+        padding: 0 20px 40px 20px;
+    }
+
+    /* Left sidebar */
+    .sidebar-left {
+        width: 30%;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+    .sidebar-left > div {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px 20px;
+        box-sizing: border-box;
+        box-shadow: 0 0 5px rgb(0 0 0 / 0.1);
+    }
+    .sidebar-left h2 {
+        margin-top: 0;
+        font-size: 1.4rem;
+        color: #2980b9;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 6px;
+    }
+    ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 10px 0 0 0;
+    }
+    li {
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        color: #555;
+    }
+    li:last-child {
+        border-bottom: none;
+    }
+    .category {
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    .subcategory {
+        padding-left: 15px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .emoji {
+        margin-right: 8px;
+    }
+
+    /* Right main content */
+    .main-content {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 15px;
+        background-color: #fff;
+        padding: 10px 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgb(0 0 0 / 0.1);
+        flex-wrap: wrap;
+    }
+    .filter-bar button {
+        background-color: #3498db;
+        border: none;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+    .filter-bar button:hover,
+    .filter-bar button.active {
+        background-color: #2980b9;
+    }
+
+    /* Post cards */
+    .post-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        box-sizing: border-box;
+        box-shadow: 0 0 7px rgb(0 0 0 / 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        color: #2980b9;
+        font-size: 0.95rem;
+    }
+    .post-header .views {
+        font-weight: normal;
+        font-size: 0.85rem;
+        color: #666;
+    }
+    .post-body {
+        display: flex;
+        gap: 20px;
+    }
+    .post-image {
+        flex-shrink: 0;
+        width: 160px;
+        height: 110px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .post-info {
+        flex-grow: 1;
+    }
+    .post-title {
+        font-size: 1.1rem;
+        margin: 0 0 6px 0;
+        color: #2c3e50;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+    .post-title:hover {
+        color: #3498db;
+    }
+    .post-desc {
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.4;
+    }
+
+    .post-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 12px;
+    }
+    .post-footer .reactions-total {
+        font-weight: bold;
+    }
+    .post-footer .emojis {
+        display: flex;
+        gap: 8px;
+    }
+    .post-footer .emojis span {
+        font-size: 1.3rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Pagination placeholder */
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1rem;
+        color: #2980b9;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Blog nomi</h1>
+    <input type="search" placeholder="Search 🔍" />
+</header>
+
+<main>
+    <aside class="sidebar-left">
+        <div class="section-kun-hazili">
+            <h2>Kun hazili</h2>
+            <div>"Kasallikanri internetdan qidirganingiz bilan vrech bo'lib golmyasiz."</div>
+        </div>
+
+        <div class="section-ruknlar">
+            <h2>Ruknlar</h2>
+            <ul>
+                <li class="category">Python</li>
+                <li class="category">Dasturlash</li>
+                <li class="category">Front-End</li>
+                <li class="category">Back-End</li>
+                <li class="category">Veb dasturlash</li>
+                <li class="category">Mobil dasturlash</li>
+                <li class="category">GameDev</li>
+                <li class="category">UI&amp;UX</li>
+                <li class="category">Sun'iy intelekt</li>
+                <li class="category">Boshqa</li>
+                <li class="category">Boshlovchilar uchun</li>
+                <li class="category">Havfsizlik</li>
+                <li class="category">Tarmoq</li>
+            </ul>
+        </div>
+
+        <div class="section-tags">
+            <h2>Foydali teglar</h2>
+            <ul>
+                <li>Python</li>
+                <li>Dasturlash</li>
+                <li>Javascript</li>
+                <li>Veb dasturlash</li>
+                <li>Mobil dasturlash</li>
+                <li>Front-End</li>
+                <li>Back-End</li>
+                <li>GameDev</li>
+                <li>Sun'iy intelekt</li>
+                <li>Havfsizlik</li>
+                <li>Tarmoq</li>
+                <li>OS</li>
+                <li>Dastur</li>
+                <li>Algoritm</li>
+                <li>Dizayn</li>
+                <li>HTML</li>
+                <li>CSS3</li>
+                <li>Choy ustida</li>
+                <li>Boshqa</li>
+                <li>Foydali</li>
+                <li>Dasturlash tili</li>
+                <li>Boshlovchilar uchun</li>
+            </ul>
+        </div>
+    </aside>
+
+    <section class="main-content">
+        <div class="filter-bar">
+            <button class="active">Yangilar</button>
+            <button>Yonmoqda</button>
+            <button>Emoji</button>
+            <button>TOP</button>
+            <button>Bu haftada</button>
+            <button>Bu oyda</button>
+            <button>Har doim</button>
+        </div>
+
+        <!-- Example posts -->
+        <article class="post-card">
+            <div class="post-header">
+                <div class="category">Python</div>
+                <div class="views">👁 120</div>
+            </div>
+            <div class="post-body">
+                <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
+                <div class="post-info">
+                    <h3 class="post-title">Python'da yuzni tanib olish (Face ID)</h3>
+                    <p class="post-desc">Python'da yuzni tanib olish uchun OpenCV va face_recognition kabi kutubxonalardan foydalanish mumkin...</p>
+                </div>
+            </div>
+            <div class="post-footer">
+                <div class="reactions-total">223 ta reaktsiya</div>
+                <div class="emojis">
+                    <span>👍</span>
+                    <span>❤️</span>
+                    <span>😂</span>
+                    <span>🔥</span>
+                    <span>😮</span>
+                    <span>😢</span>
+                    <span>👏</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="post-card">
+            <div class="post-header">
+                <div class="category">Front-End</div>
+                <div class="views">👁 78</div>
+            </div>
+            <div class="post-body">
+                <img src="https://via.placeholder.com/160
+
+                                        <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
+                <div class="post-info">
+                    <h3 class="post-title">Responsive dizayn asoslari</h3>
+                    <p class="post-desc">Bugungi kunda veb saytlar har xil qurilmalarda to‘g‘ri ko‘rinishi uchun responsive dizayn juda muhim. Media queries va flexbox yordamida sahifani moslashtirish...</p>
+                </div>
+            </div>
+            <div class="post-footer">
+                <div class="reactions-total">156 ta reaktsiya</div>
+                <div class="emojis">
+                    <span>👍</span>
+                    <span>❤️</span>
+                    <span>🔥</span>
+                    <span>👏</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- Siz xohlagancha postlarni shu yerga qo'shishingiz mumkin -->
+
+        <div class="pagination">
+            Sahifa 1 / 10
+        </div>
+    </section>
+</main>
+
+</body>
+</html>
