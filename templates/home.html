@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Blog Sayti</title>
 <style>
-    
-    
+
+
     .section-kun-hazili {
     background-color: #fffce0;
     border-left: 5px solid #f1c40f;
@@ -46,8 +46,8 @@
     border-radius: 10px;
     flex-shrink: 0;
 }
-    
-    
+
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -304,7 +304,7 @@
     color: #999;
     cursor: default;
 }
-    
+
     .tag-list {
     list-style: none;
     padding: 0;
@@ -361,28 +361,28 @@
         {% endfor %}
     </ul>
 </div>
-        
+
     <div class="section-tags">
     <h2>Foydali teglar</h2>
     <ul class="tag-list">
         {% for i in tags %}
         <li><a href="?tag={{ i.name }}" class="tag">{{ i.name }}</a></li>
         {% endfor %}
-        
+
     </ul>
 </div>
     </aside>
 
     <section class="main-content">
-        <div class="filter-bar">
-            <button class="active">Yangilar</button>
-            <button>Yonmoqda</button>
-            <button>Emoji</button>
-            <button>TOP</button>
-            <button>Bu haftada</button>
-            <button>Bu oyda</button>
-            <button>Har doim</button>
-        </div>
+<form method="get" class="filter-bar">
+    <button type="submit" name="filter" value="yangilar" class="{% if filter == 'yangilar' or not filter %}active{% endif %}">Yangilar</button>
+    <button type="submit" name="filter" value="yonmoqda" class="{% if filter == 'yonmoqda' %}active{% endif %}">Yonmoqda</button>
+    <button type="submit" name="filter" value="emoji" class="{% if filter == 'emoji' %}active{% endif %}">Emoji</button>
+    <button type="submit" name="filter" value="top" class="{% if filter == 'top' %}active{% endif %}">TOP</button>
+    <button type="submit" name="filter" value="hafta" class="{% if filter == 'hafta' %}active{% endif %}">Bu haftada</button>
+    <button type="submit" name="filter" value="oy" class="{% if filter == 'oy' %}active{% endif %}">Bu oyda</button>
+    <button type="submit" name="filter" value="hammasi" class="{% if filter == 'hammasi' %}active{% endif %}">Har doim</button>
+</form>
 
         {% for post in post_list %}
         <article class="post-card">
@@ -400,7 +400,7 @@
                     <a href="{% url 'post' post.slug %}">
                     <h3 class="post-title">{{ post.title }}</h3>
                         </a>
-                    
+
                     <p class="post-desc">{{ post.content|safe|truncatewords:20 }}</p>
                 </div>
             </div>
