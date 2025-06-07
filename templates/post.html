@@ -9,7 +9,7 @@
             font-family: 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f8;
+            background-color: #464a4e;
             color: #333;
         }
         .container {
@@ -89,6 +89,13 @@
         .related-posts a:hover {
             text-decoration: underline;
         }
+        
+        .emojis span {
+        font-size: 32px;  /* Emojilarni kattalashtirish */
+        cursor: pointer;
+        margin-right: 8px;
+        user-select: none;
+    }
 
         @media (max-width: 600px) {
             .post-title {
@@ -134,8 +141,8 @@
 
         <div class="emoji">
             Emoji:
-            {% for em in post.emoji.all %}
-                <span>{{ em.name }}</span>
+            {% for em in post.emoji_set_list %}
+                <span>{{ em.emoji }} ({{ em.count }})</span>
             {% empty %}
                 <span>Emoji yo‘q</span>
             {% endfor %}
@@ -147,6 +154,16 @@
 
         <div class="views">
             Ko‘rishlar soni: {{ post.views }}
+        </div>
+
+        <div class="emojis" data-post-id="{{ post.id }}">
+            <span onclick="react(this)">👍</span>
+            <span onclick="react(this)">❤️</span>
+            <span onclick="react(this)">😂</span>
+            <span onclick="react(this)">🔥</span>
+            <span onclick="react(this)">😮</span>
+            <span onclick="react(this)">😢</span>
+            <span onclick="react(this)">👏</span>
         </div>
 
         <!-- Related Posts -->
@@ -161,5 +178,29 @@
             </ul>
         </div>
     </div>
+
+    <script>
+        function react(span) {
+            const emoji = span.innerText;
+            const postId = span.closest('.emojis').dataset.postId;
+
+            fetch(`http://127.0.0.1:8000/blog/post/${postId}/react/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({emoji: emoji})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reaksiya yuborildi!');
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

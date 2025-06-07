@@ -405,16 +405,42 @@
                 </div>
             </div>
             <div class="post-footer">
-                <div class="reactions-total">{{ post.emoji.count }} ta reaktsiya</div>
-                <div class="emojis">
-                    <span>👍</span>
-                    <span>❤️</span>
-                    <span>😂</span>
-                    <span>🔥</span>
-                    <span>😮</span>
-                    <span>😢</span>
-                    <span>👏</span>
-                </div>
+                <div class="reactions-total">{{ post.reactions.count }} ta reaktsiya</div>
+                
+            <div class="emojis" data-post-id="{{ post.id }}">
+                <span onclick="react(this)">👍</span>
+                <span onclick="react(this)">❤️</span>
+                <span onclick="react(this)">😂</span>
+                <span onclick="react(this)">🔥</span>
+                <span onclick="react(this)">😮</span>
+                <span onclick="react(this)">😢</span>
+                <span onclick="react(this)">👏</span>
+            </div>
+                
+                <script>
+    function react(span) {
+        const emoji = span.innerText;
+        const postId = span.closest('.emojis').dataset.postId;
+
+        fetch(`http://127.0.0.1:8000/blog/post/${postId}/react/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({emoji: emoji})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Reaksiya yuborildi!');
+            } else {
+                alert(data.error);
+            }
+        });
+    }
+</script>
+                
             </div>
         </article>
         {% endfor %}
@@ -447,3 +473,5 @@
 
 </body>
 </html>
+
+

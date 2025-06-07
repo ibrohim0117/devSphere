@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post, Tag, Emoji
+from .models import Category, Post, Tag, Emoji, Reaction
 
 
 @admin.register(Category)
@@ -24,3 +24,9 @@ class TagAdmin(admin.ModelAdmin):
 class EmojiAdmin(admin.ModelAdmin):
     list_display = ('name', )
     search_fields = ('name',)
+
+
+@admin.register(Reaction)
+class ReactionAdmin(admin.ModelAdmin):
+    list_display = ('emoji', 'post', 'id', 'ip_address')
+    search_fields = ('emoji',)

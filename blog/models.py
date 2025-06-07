@@ -4,6 +4,8 @@ from ckeditor import fields
 from root import settings
 from django_resized import ResizedImageField
 from datetime import timedelta
+from django.db.models import Count
+
 
 
 
@@ -49,7 +51,6 @@ class Post(BaseCreatedModel):
     image = ResizedImageField(size=[300, 350], crop=['middle', 'center'], upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
     video = models.FileField(upload_to='posts/video/%Y/%m/%d', null=True, blank=True)
     views = models.PositiveIntegerField(default=0, editable=False)
-    emoji = models.ManyToManyField(Emoji, related_name='posts', blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='posts')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
 
@@ -59,12 +60,42 @@ class Post(BaseCreatedModel):
 
     @property
     def created_at_plus_5(self):
+        # for i in self.emoji_list:
+        #     print(i)
         return self.created_at + timedelta(hours=5)
+
+    @property
+    def emoji_set_list(self):
+        return self.reactions.values('emoji').annotate(count=Count('id'))
 
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+
+class Reaction(models.Model):
+    EMOJI_CHOICES = [
+        ('👍', 'Like'),
+        ('❤️', 'Love'),
+        ('😂', 'Laugh'),
+        ('🔥', 'Fire'),
+        ('😮', 'Wow'),
+        ('😢', 'Sad'),
+        ('👏', 'Clap'),
+    ]
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='reactions')
+    emoji = models.CharField(max_length=5, choices=EMOJI_CHOICES)
+    ip_address = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('post', 'ip_address')
+
+    def __str__(self):
+        return f"{self.emoji}"
 
 
 
