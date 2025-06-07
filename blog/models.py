@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.text import slugify
 from ckeditor import fields
 from root import settings
+from django_resized import ResizedImageField
+
 
 
 class BaseCreatedModel(models.Model):
@@ -42,10 +44,10 @@ class Post(BaseCreatedModel):
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     content = fields.RichTextField()
-    image = models.ImageField(upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
+    image = ResizedImageField(size=[300, 350], crop=['middle', 'center'], upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
     video = models.FileField(upload_to='posts/video/%Y/%m/%d', null=True, blank=True)
     views = models.PositiveIntegerField(default=0, editable=False)
-    emoji = models.ForeignKey(Emoji, on_delete=models.CASCADE, related_name='posts', blank=True, null=True)
+    emoji = models.ManyToManyField(Emoji, related_name='posts', blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='posts')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
 

@@ -8,7 +8,7 @@
     body {
         font-family: Arial, sans-serif;
         margin: 0;
-        background-color: aqua;
+        background-color: #464a4e;
         color: #333;
     }
     header {
@@ -284,21 +284,25 @@
             <button>Har doim</button>
         </div>
 
-        <!-- Example posts -->
+        {% for post in post_list %}
         <article class="post-card">
             <div class="post-header">
-                <div class="category">Python</div>
-                <div class="views">👁 120</div>
+                <div class="category">{{ post.category }}</div>
+                <div class="views">👁 {{ post.view }}</div>
             </div>
             <div class="post-body">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="Post image" class="post-image" />
+                {% else %}
                 <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
+                {% endif %}
                 <div class="post-info">
-                    <h3 class="post-title">Python'da yuzni tanib olish (Face ID)</h3>
-                    <p class="post-desc">Python'da yuzni tanib olish uchun OpenCV va face_recognition kabi kutubxonalardan foydalanish mumkin...</p>
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <p class="post-desc">{{ post.content|safe|truncatewords:20 }}</p>
                 </div>
             </div>
             <div class="post-footer">
-                <div class="reactions-total">223 ta reaktsiya</div>
+                <div class="reactions-total">{{ post.emoji.count }} ta reaktsiya</div>
                 <div class="emojis">
                     <span>👍</span>
                     <span>❤️</span>
@@ -310,33 +314,7 @@
                 </div>
             </div>
         </article>
-
-        <article class="post-card">
-            <div class="post-header">
-                <div class="category">Front-End</div>
-                <div class="views">👁 78</div>
-            </div>
-            <div class="post-body">
-                <img src="https://via.placeholder.com/160
-
-                                        <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
-                <div class="post-info">
-                    <h3 class="post-title">Responsive dizayn asoslari</h3>
-                    <p class="post-desc">Bugungi kunda veb saytlar har xil qurilmalarda to‘g‘ri ko‘rinishi uchun responsive dizayn juda muhim. Media queries va flexbox yordamida sahifani moslashtirish...</p>
-                </div>
-            </div>
-            <div class="post-footer">
-                <div class="reactions-total">156 ta reaktsiya</div>
-                <div class="emojis">
-                    <span>👍</span>
-                    <span>❤️</span>
-                    <span>🔥</span>
-                    <span>👏</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- Siz xohlagancha postlarni shu yerga qo'shishingiz mumkin -->
+        {% endfor %}
 
         <div class="pagination">
             Sahifa 1 / 10
