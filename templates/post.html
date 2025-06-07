@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+        .post-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .meta {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .post-image {
+            width: 100%;
+            max-height: 300px; /* Kichiklashtirildi */
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .post-content {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+        .tags, .emoji {
+            margin-bottom: 15px;
+        }
+        .tags span, .emoji span {
+            background: #eef;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .category {
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .video-container {
+            margin: 20px 0;
+        }
+        .views {
+            font-size: 14px;
+            color: #999;
+            margin-top: 20px;
+        }
+
+        .related-posts {
+            margin-top: 50px;
+        }
+        .related-posts h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        .related-posts ul {
+            list-style: none;
+            padding: 0;
+        }
+        .related-posts li {
+            margin-bottom: 10px;
+        }
+        .related-posts a {
+            text-decoration: none;
+            color: #3366cc;
+        }
+        .related-posts a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .post-title {
+                font-size: 26px;
+            }
+            .post-content {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="post-title">{{ post.title }}</h1>
+        <div class="meta">
+            Muallif: {{ post.author.get_full_name }} |
+            Sana: {{ post.created_at|date:"Y-m-d H:i" }}
+        </div>
+
+        {% if post.image %}
+            <img class="post-image" src="{{ post.image.url }}" alt="{{ post.title }}">
+        {% endif %}
+
+        {% if post.video %}
+            <div class="video-container">
+                <video width="100%" controls>
+                    <source src="{{ post.video.url }}" type="video/mp4">
+                    Brauzeringiz video formatni qo‘llab-quvvatlamaydi.
+                </video>
+            </div>
+        {% endif %}
+
+        <div class="category">Kategoriya: {{ post.category.name }}</div>
+
+        <div class="tags">
+            Teglar:
+            {% for tag in post.tags.all %}
+                <span>#{{ tag.name }}</span>
+            {% empty %}
+                <span>Teg yo‘q</span>
+            {% endfor %}
+        </div>
+
+        <div class="emoji">
+            Emoji:
+            {% for em in post.emoji.all %}
+                <span>{{ em.name }}</span>
+            {% empty %}
+                <span>Emoji yo‘q</span>
+            {% endfor %}
+        </div>
+
+        <div class="post-content">
+            {{ post.content|safe }}
+        </div>
+
+        <div class="views">
+            Ko‘rishlar soni: {{ post.views }}
+        </div>
+
+        <!-- Related Posts -->
+        <div class="related-posts">
+            <h3>O‘xshash postlar</h3>
+            <ul>
+                {% for related in related_posts %}
+                    <li><a href="{% url 'post_detail' related.slug %}">{{ related.title }}</a></li>
+                {% empty %}
+                    <li>O‘xshash postlar topilmadi.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

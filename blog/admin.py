@@ -4,7 +4,7 @@ from .models import Category, Post, Tag, Emoji
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
+    list_display = ('name', 'slug', 'id')
     search_fields = ('name',)
 
 

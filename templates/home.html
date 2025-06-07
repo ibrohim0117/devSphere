@@ -5,6 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Blog Sayti</title>
 <style>
+    
+    
+    .section-kun-hazili {
+    background-color: #fffce0;
+    border-left: 5px solid #f1c40f;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.section-kun-hazili h2 {
+    margin-top: 0;
+    color: #d35400;
+    font-size: 24px;
+}
+
+.joke-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.joke-content p {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+    flex: 1;
+}
+
+.joke-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+    
+    
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -78,10 +120,30 @@
     li:last-child {
         border-bottom: none;
     }
-    .category {
-        font-weight: bold;
-        color: #2c3e50;
-    }
+  .category-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.category {
+    display: inline-block;
+    background-color: #eef;
+    color: #2c3e50;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.category:hover {
+    background-color: #dce;
+    color: #000;
+}
     .subcategory {
         padding-left: 15px;
         font-size: 0.9rem;
@@ -202,13 +264,72 @@
     }
 
     /* Pagination placeholder */
-    .pagination {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 1rem;
-        color: #2980b9;
-        cursor: pointer;
-    }
+   .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 30px 0;
+    gap: 6px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.page-link,
+.dots {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    background-color: #f0f0f0;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.page-link:hover {
+    background-color: #d0eaff;
+    color: #000;
+}
+
+.page-link.active {
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.dots {
+    padding: 8px 10px;
+    color: #999;
+    cursor: default;
+}
+    
+    .tag-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #f0f8ff;
+    color: #2c3e50;
+    padding: 6px 12px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+.tag:hover {
+    background-color: #d0e8ff;
+    color: #000;
+}
+
 </style>
 </head>
 <body>
@@ -221,56 +342,50 @@
 <main>
     <aside class="sidebar-left">
         <div class="section-kun-hazili">
-            <h2>Kun hazili</h2>
-            <div>"Kasallikanri internetdan qidirganingiz bilan vrech bo'lib golmyasiz."</div>
-        </div>
+    <h2>Kun hazili</h2>
+    <div class="joke-content">
+        <img src="https://i.imgur.com/funny-doctor.jpg" alt="Hazil rasmi" class="joke-image">
+        <p>"Kasallikni internetdan qidirganingiz bilan vrach bo'lib qolmaysiz."</p>
+    </div>
+</div>
 
-        <div class="section-ruknlar">
-            <h2>Ruknlar</h2>
-            <ul>
-                <li class="category">Python</li>
-                <li class="category">Dasturlash</li>
-                <li class="category">Front-End</li>
-                <li class="category">Back-End</li>
-                <li class="category">Veb dasturlash</li>
-                <li class="category">Mobil dasturlash</li>
-                <li class="category">GameDev</li>
-                <li class="category">UI&amp;UX</li>
-                <li class="category">Sun'iy intelekt</li>
-                <li class="category">Boshqa</li>
-                <li class="category">Boshlovchilar uchun</li>
-                <li class="category">Havfsizlik</li>
-                <li class="category">Tarmoq</li>
-            </ul>
-        </div>
 
-        <div class="section-tags">
-            <h2>Foydali teglar</h2>
-            <ul>
-                <li>Python</li>
-                <li>Dasturlash</li>
-                <li>Javascript</li>
-                <li>Veb dasturlash</li>
-                <li>Mobil dasturlash</li>
-                <li>Front-End</li>
-                <li>Back-End</li>
-                <li>GameDev</li>
-                <li>Sun'iy intelekt</li>
-                <li>Havfsizlik</li>
-                <li>Tarmoq</li>
-                <li>OS</li>
-                <li>Dastur</li>
-                <li>Algoritm</li>
-                <li>Dizayn</li>
-                <li>HTML</li>
-                <li>CSS3</li>
-                <li>Choy ustida</li>
-                <li>Boshqa</li>
-                <li>Foydali</li>
-                <li>Dasturlash tili</li>
-                <li>Boshlovchilar uchun</li>
-            </ul>
-        </div>
+    <div class="section-ruknlar">
+    <h2>Ruknlar</h2>
+    <ul class="category-list">
+        {% for i in category %}
+        <li><a href="?category={{ i.slug }}" class="category">{{ i.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+        
+    <div class="section-tags">
+    <h2>Foydali teglar</h2>
+    <ul class="tag-list">
+        <li><a href="?tag=Python" class="tag">Python</a></li>
+        <li><a href="?tag=Dasturlash" class="tag">Dasturlash</a></li>
+        <li><a href="?tag=Javascript" class="tag">Javascript</a></li>
+        <li><a href="?tag=Veb dasturlash" class="tag">Veb dasturlash</a></li>
+        <li><a href="?tag=Mobil dasturlash" class="tag">Mobil dasturlash</a></li>
+        <li><a href="?tag=Front-End" class="tag">Front-End</a></li>
+        <li><a href="?tag=Back-End" class="tag">Back-End</a></li>
+        <li><a href="?tag=GameDev" class="tag">GameDev</a></li>
+        <li><a href="?tag=Sun'iy intelekt" class="tag">Sun'iy intelekt</a></li>
+        <li><a href="?tag=Havfsizlik" class="tag">Havfsizlik</a></li>
+        <li><a href="?tag=Tarmoq" class="tag">Tarmoq</a></li>
+        <li><a href="?tag=OS" class="tag">OS</a></li>
+        <li><a href="?tag=Dastur" class="tag">Dastur</a></li>
+        <li><a href="?tag=Algoritm" class="tag">Algoritm</a></li>
+        <li><a href="?tag=Dizayn" class="tag">Dizayn</a></li>
+        <li><a href="?tag=HTML" class="tag">HTML</a></li>
+        <li><a href="?tag=CSS3" class="tag">CSS3</a></li>
+        <li><a href="?tag=Choy ustida" class="tag">Choy ustida</a></li>
+        <li><a href="?tag=Boshqa" class="tag">Boshqa</a></li>
+        <li><a href="?tag=Foydali" class="tag">Foydali</a></li>
+        <li><a href="?tag=Dasturlash tili" class="tag">Dasturlash tili</a></li>
+        <li><a href="?tag=Boshlovchilar uchun" class="tag">Boshlovchilar uchun</a></li>
+    </ul>
+</div>
     </aside>
 
     <section class="main-content">
@@ -297,7 +412,10 @@
                 <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
                 {% endif %}
                 <div class="post-info">
+                    <a href="{% url 'post' post.slug %}">
                     <h3 class="post-title">{{ post.title }}</h3>
+                        </a>
+                    
                     <p class="post-desc">{{ post.content|safe|truncatewords:20 }}</p>
                 </div>
             </div>
@@ -317,8 +435,14 @@
         {% endfor %}
 
         <div class="pagination">
-            Sahifa 1 / 10
-        </div>
+    <a href="?page=1" class="page-link">&laquo;</a>
+    <a href="?page=1" class="page-link active">1</a>
+    <a href="?page=2" class="page-link">2</a>
+    <a href="?page=3" class="page-link">3</a>
+    <span class="dots">...</span>
+    <a href="?page=10" class="page-link">10</a>
+    <a href="?page=2" class="page-link">&raquo;</a>
+</div>
     </section>
 </main>
 
