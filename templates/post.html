@@ -105,7 +105,7 @@
         <h1 class="post-title">{{ post.title }}</h1>
         <div class="meta">
             Muallif: {{ post.author.get_full_name }} |
-            Sana: {{ post.created_at|date:"Y-m-d H:i" }}
+            Sana: {{ post.created_at_plus_5|date:"Y-m-d H:i" }}
         </div>
 
         {% if post.image %}

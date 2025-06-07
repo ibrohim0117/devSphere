@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
@@ -336,7 +337,9 @@
 
 <header>
     <h1>Blog nomi</h1>
-    <input type="search" placeholder="Search 🔍" />
+    <form method="get">
+            <input name="q" type="search" placeholder="Search 🔍" />
+    </form>
 </header>
 
 <main>
@@ -362,28 +365,10 @@
     <div class="section-tags">
     <h2>Foydali teglar</h2>
     <ul class="tag-list">
-        <li><a href="?tag=Python" class="tag">Python</a></li>
-        <li><a href="?tag=Dasturlash" class="tag">Dasturlash</a></li>
-        <li><a href="?tag=Javascript" class="tag">Javascript</a></li>
-        <li><a href="?tag=Veb dasturlash" class="tag">Veb dasturlash</a></li>
-        <li><a href="?tag=Mobil dasturlash" class="tag">Mobil dasturlash</a></li>
-        <li><a href="?tag=Front-End" class="tag">Front-End</a></li>
-        <li><a href="?tag=Back-End" class="tag">Back-End</a></li>
-        <li><a href="?tag=GameDev" class="tag">GameDev</a></li>
-        <li><a href="?tag=Sun'iy intelekt" class="tag">Sun'iy intelekt</a></li>
-        <li><a href="?tag=Havfsizlik" class="tag">Havfsizlik</a></li>
-        <li><a href="?tag=Tarmoq" class="tag">Tarmoq</a></li>
-        <li><a href="?tag=OS" class="tag">OS</a></li>
-        <li><a href="?tag=Dastur" class="tag">Dastur</a></li>
-        <li><a href="?tag=Algoritm" class="tag">Algoritm</a></li>
-        <li><a href="?tag=Dizayn" class="tag">Dizayn</a></li>
-        <li><a href="?tag=HTML" class="tag">HTML</a></li>
-        <li><a href="?tag=CSS3" class="tag">CSS3</a></li>
-        <li><a href="?tag=Choy ustida" class="tag">Choy ustida</a></li>
-        <li><a href="?tag=Boshqa" class="tag">Boshqa</a></li>
-        <li><a href="?tag=Foydali" class="tag">Foydali</a></li>
-        <li><a href="?tag=Dasturlash tili" class="tag">Dasturlash tili</a></li>
-        <li><a href="?tag=Boshlovchilar uchun" class="tag">Boshlovchilar uchun</a></li>
+        {% for i in tags %}
+        <li><a href="?tag={{ i.name }}" class="tag">{{ i.name }}</a></li>
+        {% endfor %}
+        
     </ul>
 </div>
     </aside>
@@ -403,13 +388,13 @@
         <article class="post-card">
             <div class="post-header">
                 <div class="category">{{ post.category }}</div>
-                <div class="views">👁 {{ post.view }}</div>
+                <div class="views">👁 {{ post.views }}</div>
             </div>
             <div class="post-body">
                 {% if post.image %}
                 <img src="{{ post.image.url }}" alt="Post image" class="post-image" />
                 {% else %}
-                <img src="https://via.placeholder.com/160x110" alt="Post image" class="post-image" />
+                <img src="{% static 'images/static.jpg' %}" alt="Post image" class="post-image" />
                 {% endif %}
                 <div class="post-info">
                     <a href="{% url 'post' post.slug %}">
@@ -434,14 +419,28 @@
         </article>
         {% endfor %}
 
-        <div class="pagination">
-    <a href="?page=1" class="page-link">&laquo;</a>
-    <a href="?page=1" class="page-link active">1</a>
-    <a href="?page=2" class="page-link">2</a>
-    <a href="?page=3" class="page-link">3</a>
-    <span class="dots">...</span>
-    <a href="?page=10" class="page-link">10</a>
-    <a href="?page=2" class="page-link">&raquo;</a>
+    <div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="page-link">&laquo;</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">‹</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if num == page_obj.number %}
+            <a href="?page={{ num }}" class="page-link active">{{ num }}</a>
+        {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% elif num == 1 or num == page_obj.paginator.num_pages %}
+            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% elif num == page_obj.number|add:-3 or num == page_obj.number|add:3 %}
+            <span class="dots">...</span>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">›</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">&raquo;</a>
+    {% endif %}
 </div>
     </section>
 </main>

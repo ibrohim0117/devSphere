@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from ckeditor import fields
 from root import settings
 from django_resized import ResizedImageField
+from datetime import timedelta
+
 
 
 
@@ -55,6 +57,14 @@ class Post(BaseCreatedModel):
         return self.title
 
 
+    @property
+    def created_at_plus_5(self):
+        return self.created_at + timedelta(hours=5)
+
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+
+
