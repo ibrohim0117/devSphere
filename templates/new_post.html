@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Yangi Post Qo‘shish</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 320px;
+        }
+
+        select[multiple] {
+            height: 140px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📝 Yangi Post Qo‘shish</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title">Sarlavha</label>
+        <input type="text" id="title" name="title" placeholder="Post sarlavhasi..." required>
+
+        <label for="category">Kategoriya</label>
+        <select id="category" name="category" required>
+            {% for i in category %}
+            <option value="{{ i.id }}">{{ i.name }}</option>
+            {% endfor %}
+            
+        </select>
+
+        <label for="tags">Teglar (bir nechta tanlang)</label>
+        <select id="tags" name="tags" multiple required>
+            {% for i in tags %}
+            <option value="{{ i.id }}">{{ i.name }}</option>
+            {% endfor %}
+            
+        </select>
+
+        <label for="content">Kontent</label>
+        <textarea id="content" name="content" placeholder="Post kontenti..." required></textarea>
+
+        <label for="image">Rasm yuklash (ixtiyoriy)</label>
+        <input type="file" id="image" name="image" accept="image/*">
+
+        <label for="video">Video yuklash (ixtiyoriy)</label>
+        <input type="file" id="video" name="video" accept="video/*">
+
+        <input type="hidden" id="author" value="{{ request.user.id }}" name="author" placeholder="1" required>
+
+        <button type="submit" class="submit-btn">Postni Yaratish</button>
+    </form>
+</div>
+</body>
+</html>

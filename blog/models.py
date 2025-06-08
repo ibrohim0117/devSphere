@@ -69,7 +69,12 @@ class Post(BaseCreatedModel):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        a = 0
+        while Post.objects.filter(slug=self.slug).exists():
+            self.slug += f'{a}'
+            a += 1
         super().save(*args, **kwargs)
+
 
 
 

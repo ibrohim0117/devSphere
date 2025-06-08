@@ -188,7 +188,7 @@
             <textarea name="about" id="id_about" placeholder="O'zingiz haqingizda yozing...">{{ user.about }}</textarea>
 
             <label for="id_email">Email:</label>
-            <input type="email" name="email" id="id_email" value="{{ user.email }}" required />
+            <input type="email" name="email" id="id_email" value="{{ user.email }}" readonly />
 
             <label for="id_facebook">Facebook URL:</label>
             <input type="url" name="facebook" id="id_facebook" value="{{ user.facebook|default_if_none:'' }}" />
@@ -215,7 +215,7 @@
         </form>
 
         <div class="buttons-container">
-            <a href="#" class="action-link">➕ Post yozish</a>
+            <a href="{% url 'post_create' %}" class="action-link">➕ Post yozish</a>
             <a href="#" class="action-link">📄 Mening postlarim</a>
             <a href="{% url 'home' %}" class="action-link">🏠 Bosh sahifaga</a>
         </div>

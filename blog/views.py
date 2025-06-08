@@ -1,13 +1,14 @@
-from django.shortcuts import render
-from django.views.generic import (
-    TemplateView, ListView, DetailView
-)
-from blog.models import Post, Category, Tag
-from .filter_manager import FilterManager
-
-# views.py
+from django.urls import reverse_lazy
 from django.http import JsonResponse
-from .models import Post, Reaction
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import (
+    TemplateView, ListView, DetailView, CreateView
+)
+
+
+from .models import Post, Category, Tag, Reaction
+from .filter_manager import FilterManager
+from .forms import PostCreateForm
 from .utils import get_client_ip
 
 
@@ -31,6 +32,7 @@ class HomeView(ListView):
     template_name = 'home.html'
     context_object_name = 'post_list'
     paginate_by = 4
+    ordering = ['-id']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -68,3 +70,19 @@ class PostDetailView(DetailView):
         post.views += 1
         post.save(update_fields=['views'])
         return post
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostCreateForm
+    template_name = 'new_post.html'
+    login_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['category'] = Category.objects.all()
+        data['tags'] = Tag.objects.all()
+        return data
+
+
+

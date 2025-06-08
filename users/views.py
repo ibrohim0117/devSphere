@@ -1,5 +1,5 @@
 import uuid
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, UpdateView
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
@@ -93,6 +93,25 @@ class LogoutRedirectView(LoginRequiredMixin, View):
 
 
 
-class ProfileView(TemplateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
+    model = User
     template_name = 'profile.html'
+    fields = [
+        'avatar', 'about', 'email', 'facebook', 'twitter',
+        'instagram', 'linkedin', 'github', 'leetcode',
+        'telegram'
+    ]
+    login_url = reverse_lazy('login')
+    success_url = reverse_lazy('profile')
+
+    def get_object(self):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Profil muvaffaqiyatli yangilandi!')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Xatolik: iltimos ma\'lumotlarni to‘g‘ri to‘ldiring.')
+        return super().form_invalid(form)
 
