@@ -91,3 +91,8 @@ class LogoutRedirectView(LoginRequiredMixin, View):
         logout(self.request)
         return redirect('home')
 
+
+
+class ProfileView(TemplateView):
+    template_name = 'profile.html'
+

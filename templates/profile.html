@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Profilni tahrirlash</title>
+    <style>
+        /* Umumiy style */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 50px 20px;
+            color: #222;
+        }
+
+        /* Container */
+        .profile-container {
+            background: white;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+            transition: box-shadow 0.3s ease;
+        }
+        .profile-container:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 35px;
+            font-weight: 700;
+            color: #003366;
+            letter-spacing: 1px;
+        }
+
+        /* Form label */
+        form label {
+            display: block;
+            margin-top: 20px;
+            font-weight: 600;
+            color: #004080;
+        }
+
+        /* Inputs and textarea */
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="url"],
+        form textarea,
+        form input[type="file"] {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 8px;
+            border: 1.8px solid #a6bbe5;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 400;
+            color: #222;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="email"]:focus,
+        form input[type="url"]:focus,
+        form textarea:focus,
+        form input[type="file"]:focus {
+            border-color: #3a6ff8;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* Avatar preview */
+        .avatar-preview {
+            display: block;
+            margin: 0 auto 30px auto;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #3a6ff8;
+            box-shadow: 0 4px 15px rgba(58, 111, 248, 0.3);
+            transition: box-shadow 0.3s ease;
+        }
+        .avatar-preview:hover {
+            box-shadow: 0 6px 25px rgba(58, 111, 248, 0.6);
+        }
+
+        /* Buttons container */
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Action buttons */
+        button, .action-link {
+            flex: 1 1 48%;
+            background-color: #3a6ff8;
+            color: white;
+            padding: 14px 0;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(58, 111, 248, 0.45);
+        }
+        button:hover, .action-link:hover {
+            background-color: #254ecf;
+            box-shadow: 0 6px 18px rgba(37, 78, 207, 0.7);
+        }
+
+        /* Submit button full width */
+        button[type="submit"] {
+            flex: 1 1 100%;
+            margin-top: 30px;
+        }
+
+        /* Success message */
+        .success-message {
+            color: #117a37;
+            margin-bottom: 25px;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .profile-container {
+                padding: 25px 20px;
+            }
+            button, .action-link {
+                flex: 1 1 100%;
+            }
+            .buttons-container {
+                margin-top: 30px;
+                gap: 15px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <h2>Profilni tahrirlash</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="success-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Avatar preview -->
+            {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar-preview" />
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.email|slice:":1" }}&background=random" alt="Avatar" class="avatar-preview" />
+            {% endif %}
+
+            <label for="id_avatar">Profil rasmi (avatar):</label>
+            <input type="file" name="avatar" id="id_avatar" accept="image/*" />
+
+            <label for="id_about">O'zingiz haqingizda:</label>
+            <textarea name="about" id="id_about" placeholder="O'zingiz haqingizda yozing...">{{ user.about }}</textarea>
+
+            <label for="id_email">Email:</label>
+            <input type="email" name="email" id="id_email" value="{{ user.email }}" required />
+
+            <label for="id_facebook">Facebook URL:</label>
+            <input type="url" name="facebook" id="id_facebook" value="{{ user.facebook|default_if_none:'' }}" />
+
+            <label for="id_twitter">Twitter URL:</label>
+            <input type="url" name="twitter" id="id_twitter" value="{{ user.twitter|default_if_none:'' }}" />
+
+            <label for="id_instagram">Instagram URL:</label>
+            <input type="url" name="instagram" id="id_instagram" value="{{ user.instagram|default_if_none:'' }}" />
+
+            <label for="id_linkedin">LinkedIn URL:</label>
+            <input type="url" name="linkedin" id="id_linkedin" value="{{ user.linkedin|default_if_none:'' }}" />
+
+            <label for="id_github">GitHub URL:</label>
+            <input type="url" name="github" id="id_github" value="{{ user.github|default_if_none:'' }}" />
+
+            <label for="id_leetcode">LeetCode URL:</label>
+            <input type="url" name="leetcode" id="id_leetcode" value="{{ user.leetcode|default_if_none:'' }}" />
+
+            <label for="id_telegram">Telegram URL:</label>
+            <input type="url" name="telegram" id="id_telegram" value="{{ user.telegram|default_if_none:'' }}" />
+
+            <button type="submit">Saqlash</button>
+        </form>
+
+        <div class="buttons-container">
+            <a href="#" class="action-link">➕ Post yozish</a>
+            <a href="#" class="action-link">📄 Mening postlarim</a>
+            <a href="{% url 'home' %}" class="action-link">🏠 Bosh sahifaga</a>
+        </div>
+    </div>
+
+</body>
+</html>
