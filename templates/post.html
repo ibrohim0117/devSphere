@@ -171,7 +171,7 @@
             <h3>O‘xshash postlar</h3>
             <ul>
                 {% for related in related_posts %}
-                    <li><a href="{% url 'post_detail' related.slug %}">{{ related.title }}</a></li>
+                    <li><a href="{% url 'post' related.slug %}">{{ related.title }}</a></li>
                 {% empty %}
                     <li>O‘xshash postlar topilmadi.</li>
                 {% endfor %}

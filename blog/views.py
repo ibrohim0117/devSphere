@@ -71,6 +71,14 @@ class PostDetailView(DetailView):
         post.save(update_fields=['views'])
         return post
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        slug = self.kwargs.get('slug')
+        post = Post.objects.filter(slug=slug).first()
+        if post:
+            data['related_posts'] = Post.objects.filter(category__slug=post.category.slug).all()
+        return data
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post

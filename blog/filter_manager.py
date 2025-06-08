@@ -34,7 +34,7 @@ class FilterManager:
             self.queryset = self.queryset.filter(views__gte=100).order_by('-views')
         elif self.filter_option == 'emoji':
             self.queryset = self.queryset.annotate(
-                emoji_count=Count('emoji')
+                emoji_count=Count('reactions__emoji')
             ).filter(emoji_count__gt=0).order_by('-emoji_count')
         elif self.filter_option == 'hafta':
             one_week_ago = now() - timedelta(days=7)
