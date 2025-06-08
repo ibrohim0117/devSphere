@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
@@ -45,4 +46,14 @@ class User(AbstractUser):
     username = None
 
     def __str__(self):
-        return self.username
+        return self.email
+
+
+
+class EmailConfirmation(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.email
