@@ -22,3 +22,8 @@ class RegisterForm(forms.Form):
         if p1 and p2 and p1 != p2:
             raise forms.ValidationError("Parollar mos emas.")
         return cleaned_data
+
+
+class UserLoginForm(forms.Form):
+    email = forms.CharField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput)

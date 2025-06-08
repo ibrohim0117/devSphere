@@ -1,19 +1,21 @@
-from django.views.generic import TemplateView
+import uuid
+from django.views.generic import TemplateView, FormView
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.http import HttpResponse
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import RegisterForm
+from .forms import RegisterForm, UserLoginForm
 from .tasks import send_verification_email
 from .models import User, EmailConfirmation
-import uuid
+from .mixins import NotLoginRequiredMixin
 
 
 
-class RegisterView(TemplateView):
+class RegisterView(NotLoginRequiredMixin, TemplateView):
     template_name = 'register.html'
 
     def post(self, request, *args, **kwargs):
@@ -66,5 +68,26 @@ class VerifyEmailView(View):
         messages.success(request, "Email muvaffaqiyatli tasdiqlandi va siz tizimga kirdingiz!")
         return redirect('home')
 
-        # return HttpResponse("Email muvaffaqiyatli tasdiqlandi. Endi tizimga kirishingiz mumkin.")
+
+
+class UserLoginView(NotLoginRequiredMixin, FormView):
+    form_class = UserLoginForm
+    template_name = 'login.html'
+    success_url = 'home'
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = User.objects.filter(email=email).first()
+        if user and user.check_password(password):
+            login(self.request, user)
+            return redirect('home')
+        return super().form_valid(form)
+
+
+class LogoutRedirectView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+    def get(self, *args, **kwargs):
+        logout(self.request)
+        return redirect('home')
 
