@@ -1,4 +1,4 @@
-test
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
@@ -99,7 +99,7 @@ test
         <div class="or-divider">Yoki</div>
 
         <div class="social-login">
-            <a href="/accounts/google/login/">
+            <a href="{% provider_login_url 'google' %}">
                 <button type="button">
                     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google logo" />
                     Google bilan kirish
