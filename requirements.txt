@@ -3,6 +3,7 @@ amqp==5.3.1
 annotated-types==0.7.0
 anyio==4.7.0
 asgiref==3.8.1
+async-timeout==5.0.1
 bcrypt==4.3.0
 billiard==4.2.1
 celery==5.5.3
@@ -51,6 +52,7 @@ python-decouple==3.8
 python-dotenv==1.1.0
 python-jose==3.5.0
 python-jwt==4.1.0
+redis==4.5.5
 requests==2.32.4
 rsa==4.9.1
 six==1.17.0

@@ -1,5 +1,9 @@
 run:
-	python manage.py runserver & celery -A root worker --loglevel=info
+	python manage.py runserver
+
+
+celery:
+	celery -A root worker --loglevel=info
 
 
 mig:

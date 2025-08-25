@@ -46,11 +46,12 @@ class Post(BaseCreatedModel):
     slug = models.SlugField(max_length=255, unique=True, editable=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     content = fields.RichTextField()
-    image = ResizedImageField(size=[300, 350], crop=['middle', 'center'], upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
+    image = models.ImageField(upload_to='posts/images/%Y/%m/%d', null=True, blank=True)
     video = models.FileField(upload_to='posts/video/%Y/%m/%d', null=True, blank=True)
     views = models.PositiveIntegerField(default=0, editable=False)
     tags = models.ManyToManyField(Tag, related_name='posts')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

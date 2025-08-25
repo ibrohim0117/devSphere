@@ -458,64 +458,66 @@
 </form>
 
         {% for post in post_list %}
-        <article class="post-card">
-            <div class="post-header">
-                <div class="category">{{ post.category }}</div>
-                <div class="views">👁 {{ post.views }}</div>
-            </div>
-            <div class="post-body">
-                {% if post.image %}
-                <img src="{{ post.image.url }}" alt="Post image" class="post-image" />
-                {% else %}
-                <img src="{% static 'images/static.jpg' %}" alt="Post image" class="post-image" />
-                {% endif %}
-                <div class="post-info">
-                    <a href="{% url 'post' post.slug %}">
-                    <h3 class="post-title">{{ post.title }}</h3>
-                        </a>
-
-                    <p class="post-desc">{{ post.content|safe|truncatewords:20 }}</p>
+            {% if post.is_active %}
+            <article class="post-card">
+                <div class="post-header">
+                    <div class="category">{{ post.category }}</div>
+                    <div class="views">👁 {{ post.views }}</div>
                 </div>
-            </div>
-            <div class="post-footer">
-                <div class="reactions-total">{{ post.reactions.count }} ta reaktsiya</div>
-                
-            <div class="emojis" data-post-id="{{ post.id }}">
-                <span onclick="react(this)">👍</span>
-                <span onclick="react(this)">❤️</span>
-                <span onclick="react(this)">😂</span>
-                <span onclick="react(this)">🔥</span>
-                <span onclick="react(this)">😮</span>
-                <span onclick="react(this)">😢</span>
-                <span onclick="react(this)">👏</span>
-            </div>
-                
-                <script>
-    function react(span) {
-        const emoji = span.innerText;
-        const postId = span.closest('.emojis').dataset.postId;
-
-        fetch(`http://127.0.0.1:8000/blog/post/${postId}/react/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({emoji: emoji})
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                alert('Reaksiya yuborildi!');
-            } else {
-                alert(data.error);
-            }
-        });
-    }
-</script>
-                
-            </div>
-        </article>
+                <div class="post-body">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="Post image" class="post-image" />
+                    {% else %}
+                    <img src="{% static 'images/static.jpg' %}" alt="Post image" class="post-image" />
+                    {% endif %}
+                    <div class="post-info">
+                        <a href="{% url 'post' post.slug %}">
+                        <h3 class="post-title">{{ post.title }}</h3>
+                            </a>
+    
+                        <p class="post-desc">{{ post.content|safe|truncatewords:20 }}</p>
+                    </div>
+                </div>
+                <div class="post-footer">
+                    <div class="reactions-total">{{ post.reactions.count }} ta reaktsiya</div>
+                    
+                <div class="emojis" data-post-id="{{ post.id }}">
+                    <span onclick="react(this)">👍</span>
+                    <span onclick="react(this)">❤️</span>
+                    <span onclick="react(this)">😂</span>
+                    <span onclick="react(this)">🔥</span>
+                    <span onclick="react(this)">😮</span>
+                    <span onclick="react(this)">😢</span>
+                    <span onclick="react(this)">👏</span>
+                </div>
+                    
+                    <script>
+        function react(span) {
+            const emoji = span.innerText;
+            const postId = span.closest('.emojis').dataset.postId;
+    
+            fetch(`http://127.0.0.1:8000/blog/post/${postId}/react/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({emoji: emoji})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Reaksiya yuborildi!');
+                } else {
+                    alert(data.error);
+                }
+            });
+        }
+    </script>
+                    
+                </div>
+            </article>
+            {% endif %}
         {% endfor %}
 
     <div class="pagination">
@@ -541,6 +543,7 @@
         <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">&raquo;</a>
     {% endif %}
 </div>
+
     </section>
 </main>
 

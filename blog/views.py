@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     TemplateView, ListView, DetailView, CreateView
 )
+from django.contrib import messages
 
 
 from .models import Post, Category, Tag, Reaction
@@ -35,7 +36,7 @@ class HomeView(ListView):
     ordering = ['-id']
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().filter(is_active=True)
         search = self.request.GET.get('q')
         filter_option = self.request.GET.get('filter')
         category_option = self.request.GET.get('category')
@@ -85,12 +86,17 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = PostCreateForm
     template_name = 'new_post.html'
     login_url = reverse_lazy('login')
+    success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['category'] = Category.objects.all()
         data['tags'] = Tag.objects.all()
         return data
+    
+    def form_valid(self, form):
+        messages.success(self.request, "✅ Post adminga yuborildi!")
+        return super().form_valid(form)
 
 
 
