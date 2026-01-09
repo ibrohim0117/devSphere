@@ -54,16 +54,31 @@ class VerifyEmailView(View):
         try:
             confirmation = EmailConfirmation.objects.get(token=token)
         except EmailConfirmation.DoesNotExist:
-            return HttpResponse("Noto'g'ri yoki muddati o'tgan tasdiqlash linki.", status=400)
+            messages.error(request, "Noto'g'ri yoki muddati o'tgan tasdiqlash linki.")
+            return redirect('register')
+
+        # Token muddatini tekshirish
+        if confirmation.is_expired():
+            confirmation.delete()
+            messages.error(request, "Tasdiqlash linki muddati o'tgan. Iltimos, qayta ro'yxatdan o'ting.")
+            return redirect('register')
 
         user = confirmation.user
+        
+        # Agar allaqachon tasdiqlangan bo'lsa
+        if user.is_verified and user.is_active:
+            messages.info(request, "Email allaqachon tasdiqlangan.")
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('home')
+
         user.is_active = True
         user.is_verified = True
         user.save()
 
-        # confirmation.delete()
+        # Token'ni o'chirish
+        confirmation.delete()
 
-        login(request, user)
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
         messages.success(request, "Email muvaffaqiyatli tasdiqlandi va siz tizimga kirdingiz!")
         return redirect('home')
@@ -79,10 +94,18 @@ class UserLoginView(NotLoginRequiredMixin, FormView):
         email = form.cleaned_data.get("email")
         password = form.cleaned_data.get("password")
         user = User.objects.filter(email=email).first()
+        
         if user and user.check_password(password):
-            login(self.request, user)
+            # Superuser har doim login qila oladi
+            if not user.is_active and not user.is_superuser:
+                messages.error(self.request, "Hisobingiz faol emas. Iltimos, emailingizni tasdiqlang.")
+                return redirect('login')
+            login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(self.request, f"Xush kelibsiz, {user.email}!")
             return redirect('home')
-        return super().form_valid(form)
+        else:
+            messages.error(self.request, "Email yoki parol noto'g'ri.")
+            return super().form_invalid(form)
 
 
 class LogoutRedirectView(LoginRequiredMixin, View):

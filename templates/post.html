@@ -1,118 +1,334 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>{{ post.title }}</title>
+    <title>{{ post.title }} - devSphere</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background-color: #464a4e;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             color: #333;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            background: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            border-radius: 10px;
-        }
-        .post-title {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: #222;
-        }
-        .meta {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 20px;
-        }
-        .post-image {
-            width: 100%;
-            max-height: 300px; /* Kichiklashtirildi */
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .post-content {
-            font-size: 18px;
-            line-height: 1.8;
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             margin-bottom: 30px;
         }
-        .tags, .emoji {
-            margin-bottom: 15px;
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
         }
-        .tags span, .emoji span {
-            background: #eef;
-            padding: 5px 10px;
+
+        header h1 a {
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+
+        header h1 a:hover {
+            transform: scale(1.05);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             border-radius: 20px;
-            margin-right: 5px;
-            font-size: 14px;
-            display: inline-block;
+            margin-bottom: 30px;
         }
+
+        .post-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #2d3436;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .meta {
+            font-size: 0.95rem;
+            color: #636e72;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        .video-container {
+            margin: 30px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
         .category {
-            font-weight: bold;
-            color: #444;
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .tags {
             margin-bottom: 20px;
         }
-        .video-container {
+
+        .tags span {
+            background: #e8f4f8;
+            color: #2c3e50;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            display: inline-block;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .tags span:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .emoji-stats {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .emoji-stats span {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-right: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            color: #2d3436;
+        }
+
+        .post-content h1, .post-content h2, .post-content h3 {
+            color: #2d3436;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .post-content p {
+            margin-bottom: 15px;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
             margin: 20px 0;
         }
+
         .views {
-            font-size: 14px;
-            color: #999;
-            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #636e72;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .emojis {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .emojis span {
+            font-size: 2.5rem;
+            cursor: pointer;
+            margin: 0 10px;
+            user-select: none;
+            transition: all 0.3s;
+            filter: grayscale(0.3);
+            display: inline-block;
+        }
+
+        .emojis span:hover {
+            transform: scale(1.4) rotate(5deg);
+            filter: grayscale(0);
+        }
+
+        .admin-panel {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+            border-radius: 15px;
+            border-left: 5px solid #fdcb6e;
+        }
+
+        .admin-panel h3 {
+            margin-top: 0;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .admin-panel a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .admin-panel a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         }
 
         .related-posts {
             margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
         }
+
         .related-posts h3 {
-            font-size: 20px;
-            margin-bottom: 15px;
-            color: #222;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2d3436;
         }
+
         .related-posts ul {
             list-style: none;
             padding: 0;
         }
+
         .related-posts li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
+
+        .related-posts li:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+        }
+
         .related-posts a {
             text-decoration: none;
-            color: #3366cc;
+            color: #667eea;
+            font-weight: 600;
+            transition: color 0.3s;
         }
-        .related-posts a:hover {
-            text-decoration: underline;
-        }
-        
-        .emojis span {
-        font-size: 32px;  /* Emojilarni kattalashtirish */
-        cursor: pointer;
-        margin-right: 8px;
-        user-select: none;
-    }
 
-        @media (max-width: 600px) {
-            .post-title {
-                font-size: 26px;
+        .related-posts a:hover {
+            color: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+                margin: 20px 15px;
             }
+
+            .post-title {
+                font-size: 1.8rem;
+            }
+
             .post-content {
-                font-size: 16px;
+                font-size: 1rem;
+            }
+
+            .emojis span {
+                font-size: 2rem;
+                margin: 0 5px;
             }
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+    </header>
+
     <div class="container">
         <h1 class="post-title">{{ post.title }}</h1>
         <div class="meta">
-            Muallif: {{ post.author.get_full_name }} |
-            Sana: {{ post.created_at_plus_5|date:"Y-m-d H:i" }}
+            <span>👤 <strong>Muallif:</strong> {{ post.author.get_full_name|default:post.author.email }}</span>
+            <span>📅 <strong>Sana:</strong> {{ post.created_at_plus_5|date:"d.m.Y H:i" }}</span>
+            <span>👁️ <strong>Ko'rishlar:</strong> {{ post.views }}</span>
         </div>
 
         {% if post.image %}
@@ -123,71 +339,95 @@
             <div class="video-container">
                 <video width="100%" controls>
                     <source src="{{ post.video.url }}" type="video/mp4">
-                    Brauzeringiz video formatni qo‘llab-quvvatlamaydi.
+                    Brauzeringiz video formatni qo'llab-quvvatlamaydi.
                 </video>
             </div>
         {% endif %}
 
-        <div class="category">Kategoriya: {{ post.category.name }}</div>
+        <div class="category">📂 {{ post.category.name }}</div>
 
+        {% if post.tags.all %}
         <div class="tags">
-            Teglar:
+            <strong>🏷️ Teglar:</strong><br>
             {% for tag in post.tags.all %}
                 <span>#{{ tag.name }}</span>
-            {% empty %}
-                <span>Teg yo‘q</span>
             {% endfor %}
         </div>
+        {% endif %}
 
-        <div class="emoji">
-            Emoji:
+        {% if post.emoji_set_list %}
+        <div class="emoji-stats">
+            <strong>😊 Reaktsiyalar:</strong><br>
             {% for em in post.emoji_set_list %}
                 <span>{{ em.emoji }} ({{ em.count }})</span>
-            {% empty %}
-                <span>Emoji yo‘q</span>
             {% endfor %}
         </div>
+        {% endif %}
 
         <div class="post-content">
             {{ post.content|safe }}
         </div>
 
-        <div class="views">
-            Ko‘rishlar soni: {{ post.views }}
-        </div>
-
         <div class="emojis" data-post-id="{{ post.id }}">
-            <span onclick="react(this)">👍</span>
-            <span onclick="react(this)">❤️</span>
-            <span onclick="react(this)">😂</span>
-            <span onclick="react(this)">🔥</span>
-            <span onclick="react(this)">😮</span>
-            <span onclick="react(this)">😢</span>
-            <span onclick="react(this)">👏</span>
+            <span onclick="react(this)" title="Like">👍</span>
+            <span onclick="react(this)" title="Love">❤️</span>
+            <span onclick="react(this)" title="Laugh">😂</span>
+            <span onclick="react(this)" title="Fire">🔥</span>
+            <span onclick="react(this)" title="Wow">😮</span>
+            <span onclick="react(this)" title="Sad">😢</span>
+            <span onclick="react(this)" title="Clap">👏</span>
         </div>
 
-        <!-- Related Posts -->
+        {% if request.user.is_superuser %}
+            <div class="admin-panel">
+                <h3>🔧 Admin Panel</h3>
+                <a href="{% url 'admin_posts' %}" style="background: #3498db; color: white;">📋 Barcha Postlarni Ko'rish</a>
+                <a href="{% url 'toggle_post_status' post.id %}" 
+                   style="background: {% if post.is_active %}#e74c3c{% else %}#27ae60{% endif %}; color: white;"
+                   onclick="return confirm('Post holatini o\'zgartirmoqchimisiz?')">
+                    {% if post.is_active %}❌ Nofaol qilish{% else %}✅ Faollashtirish{% endif %}
+                </a>
+            </div>
+        {% endif %}
+
+        {% if related_posts %}
         <div class="related-posts">
-            <h3>O‘xshash postlar</h3>
+            <h3>📚 O'xshash postlar</h3>
             <ul>
                 {% for related in related_posts %}
                     <li><a href="{% url 'post' related.slug %}">{{ related.title }}</a></li>
-                {% empty %}
-                    <li>O‘xshash postlar topilmadi.</li>
                 {% endfor %}
             </ul>
         </div>
+        {% endif %}
     </div>
 
     <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         function react(span) {
             const emoji = span.innerText;
             const postId = span.closest('.emojis').dataset.postId;
-
-            fetch(`http://127.0.0.1:8000/blog/post/${postId}/react/`, {
+            const csrftoken = getCookie('csrftoken');
+            const url = '{% url "react_to_post" post_id=0 %}'.replace('0', postId);
+    
+            fetch(url, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-CSRFToken': csrftoken,
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({emoji: emoji})
@@ -195,10 +435,14 @@
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    alert('Reaksiya yuborildi!');
+                    location.reload();
                 } else {
-                    alert(data.error);
+                    alert(data.error || 'Xatolik yuz berdi');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Xatolik yuz berdi');
             });
         }
     </script>

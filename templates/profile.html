@@ -1,225 +1,292 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Profilni tahrirlash</title>
+    <title>Profil - devSphere</title>
     <style>
-        /* Umumiy style */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f0f4ff, #d9e4ff);
-            margin: 0; padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 50px 20px;
             color: #222;
         }
 
-        /* Container */
-        .profile-container {
-            background: white;
-            max-width: 700px;
-            width: 100%;
-            padding: 40px 50px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-            box-sizing: border-box;
-            transition: box-shadow 0.3s ease;
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        header h1 a {
+            text-decoration: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+
+        header h1 a:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-container {
+            margin-top: 20px;
+        }
+
+        .profile-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
         .profile-container:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+            transform: translateY(-5px);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 35px;
             font-weight: 700;
-            color: #003366;
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
         }
 
-        /* Form label */
+        .avatar-preview {
+            display: block;
+            margin: 0 auto 30px auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+        }
+
+        .avatar-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
         form label {
             display: block;
             margin-top: 20px;
             font-weight: 600;
-            color: #004080;
+            color: #2d3436;
+            font-size: 0.95rem;
         }
 
-        /* Inputs and textarea */
         form input[type="text"],
         form input[type="email"],
         form input[type="url"],
         form textarea,
         form input[type="file"] {
             width: 100%;
-            padding: 12px 14px;
+            padding: 14px 18px;
             margin-top: 8px;
-            border: 1.8px solid #a6bbe5;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 400;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
             color: #222;
             box-sizing: border-box;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s;
+            outline: none;
         }
 
         form input[type="text"]:focus,
         form input[type="email"]:focus,
         form input[type="url"]:focus,
-        form textarea:focus,
-        form input[type="file"]:focus {
-            border-color: #3a6ff8;
-            outline: none;
+        form textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        form input[type="email"][readonly] {
+            background: #f8f9fa;
+            cursor: not-allowed;
         }
 
         textarea {
-            min-height: 110px;
+            min-height: 120px;
             resize: vertical;
             font-family: inherit;
         }
 
-        /* Avatar preview */
-        .avatar-preview {
-            display: block;
-            margin: 0 auto 30px auto;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #3a6ff8;
-            box-shadow: 0 4px 15px rgba(58, 111, 248, 0.3);
-            transition: box-shadow 0.3s ease;
-        }
-        .avatar-preview:hover {
-            box-shadow: 0 6px 25px rgba(58, 111, 248, 0.6);
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        /* Buttons container */
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
         .buttons-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
-            gap: 20px;
+            margin-top: 30px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
-        /* Action buttons */
-        button, .action-link {
-            flex: 1 1 48%;
-            background-color: #3a6ff8;
+        .action-link {
+            flex: 1 1 30%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 14px 0;
-            font-size: 18px;
-            font-weight: 700;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
             text-align: center;
             text-decoration: none;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            user-select: none;
-            box-shadow: 0 4px 12px rgba(58, 111, 248, 0.45);
-        }
-        button:hover, .action-link:hover {
-            background-color: #254ecf;
-            box-shadow: 0 6px 18px rgba(37, 78, 207, 0.7);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        /* Submit button full width */
-        button[type="submit"] {
-            flex: 1 1 100%;
-            margin-top: 30px;
+        .action-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        /* Success message */
         .success-message {
-            color: #117a37;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 25px;
-            font-size: 17px;
-            font-weight: 600;
             text-align: center;
+            font-weight: 600;
+            border-left: 4px solid #28a745;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            border-left: 4px solid #dc3545;
+        }
+
+        @media (max-width: 768px) {
             .profile-container {
-                padding: 25px 20px;
+                padding: 30px 25px;
             }
-            button, .action-link {
+
+            .action-link {
                 flex: 1 1 100%;
             }
-            .buttons-container {
-                margin-top: 30px;
-                gap: 15px;
-            }
         }
-
     </style>
 </head>
 <body>
-
+<header>
+    <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+</header>
+<div style="padding: 20px;">
     <div class="profile-container">
-        <h2>Profilni tahrirlash</h2>
+        <h2>👤 Profilni Tahrirlash</h2>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="success-message">{{ message }}</div>
+                <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                    {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- Avatar preview -->
             {% if user.avatar %}
                 <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar-preview" />
             {% else %}
-                <img src="https://ui-avatars.com/api/?name={{ user.email|slice:":1" }}&background=random" alt="Avatar" class="avatar-preview" />
+                <img src="https://ui-avatars.com/api/?name={{ user.email|slice:":1" }}&background=667eea&color=fff&size=150" alt="Avatar" class="avatar-preview" />
             {% endif %}
 
-            <label for="id_avatar">Profil rasmi (avatar):</label>
+            <label for="id_avatar">📷 Profil rasmi (avatar):</label>
             <input type="file" name="avatar" id="id_avatar" accept="image/*" />
 
-            <label for="id_about">O'zingiz haqingizda:</label>
+            <label for="id_about">📝 O'zingiz haqingizda:</label>
             <textarea name="about" id="id_about" placeholder="O'zingiz haqingizda yozing...">{{ user.about }}</textarea>
 
-            <label for="id_email">Email:</label>
+            <label for="id_email">📧 Email:</label>
             <input type="email" name="email" id="id_email" value="{{ user.email }}" readonly />
 
-            <label for="id_facebook">Facebook URL:</label>
-            <input type="url" name="facebook" id="id_facebook" value="{{ user.facebook|default_if_none:'' }}" />
+            <label for="id_facebook">📘 Facebook URL:</label>
+            <input type="url" name="facebook" id="id_facebook" value="{{ user.facebook|default_if_none:'' }}" placeholder="https://facebook.com/..." />
 
-            <label for="id_twitter">Twitter URL:</label>
-            <input type="url" name="twitter" id="id_twitter" value="{{ user.twitter|default_if_none:'' }}" />
+            <label for="id_twitter">🐦 Twitter URL:</label>
+            <input type="url" name="twitter" id="id_twitter" value="{{ user.twitter|default_if_none:'' }}" placeholder="https://twitter.com/..." />
 
-            <label for="id_instagram">Instagram URL:</label>
-            <input type="url" name="instagram" id="id_instagram" value="{{ user.instagram|default_if_none:'' }}" />
+            <label for="id_instagram">📷 Instagram URL:</label>
+            <input type="url" name="instagram" id="id_instagram" value="{{ user.instagram|default_if_none:'' }}" placeholder="https://instagram.com/..." />
 
-            <label for="id_linkedin">LinkedIn URL:</label>
-            <input type="url" name="linkedin" id="id_linkedin" value="{{ user.linkedin|default_if_none:'' }}" />
+            <label for="id_linkedin">💼 LinkedIn URL:</label>
+            <input type="url" name="linkedin" id="id_linkedin" value="{{ user.linkedin|default_if_none:'' }}" placeholder="https://linkedin.com/in/..." />
 
-            <label for="id_github">GitHub URL:</label>
-            <input type="url" name="github" id="id_github" value="{{ user.github|default_if_none:'' }}" />
+            <label for="id_github">💻 GitHub URL:</label>
+            <input type="url" name="github" id="id_github" value="{{ user.github|default_if_none:'' }}" placeholder="https://github.com/..." />
 
-            <label for="id_leetcode">LeetCode URL:</label>
-            <input type="url" name="leetcode" id="id_leetcode" value="{{ user.leetcode|default_if_none:'' }}" />
+            <label for="id_leetcode">⚡ LeetCode URL:</label>
+            <input type="url" name="leetcode" id="id_leetcode" value="{{ user.leetcode|default_if_none:'' }}" placeholder="https://leetcode.com/..." />
 
-            <label for="id_telegram">Telegram URL:</label>
-            <input type="url" name="telegram" id="id_telegram" value="{{ user.telegram|default_if_none:'' }}" />
+            <label for="id_telegram">✈️ Telegram URL:</label>
+            <input type="url" name="telegram" id="id_telegram" value="{{ user.telegram|default_if_none:'' }}" placeholder="https://t.me/..." />
 
-            <button type="submit">Saqlash</button>
+            <button type="submit">💾 Saqlash</button>
         </form>
 
         <div class="buttons-container">
             <a href="{% url 'post_create' %}" class="action-link">➕ Post yozish</a>
-            <a href="#" class="action-link">📄 Mening postlarim</a>
+            <a href="{% url 'my_posts' %}" class="action-link">📄 Mening postlarim</a>
             <a href="{% url 'home' %}" class="action-link">🏠 Bosh sahifaga</a>
         </div>
     </div>
-
+</div>
 </body>
 </html>

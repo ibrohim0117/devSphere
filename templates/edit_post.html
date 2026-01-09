@@ -3,7 +3,7 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Yangi Post Qo'shish - devSphere</title>
+    <title>Postni Tahrirlash - devSphere</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
@@ -76,29 +76,20 @@
             background-clip: text;
         }
 
-        .messages {
+        .back-link {
+            display: inline-block;
             margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            list-style: none;
-        }
-
-        .messages li {
-            padding: 10px;
-            margin-bottom: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 8px;
+            transition: all 0.3s;
         }
 
-        .messages .success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .messages .error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         label {
@@ -161,22 +152,6 @@
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
         .errorlist {
             color: #e74c3c;
             list-style: none;
@@ -193,25 +168,66 @@
             border-left: 3px solid #dc3545;
         }
 
-        .help-text {
-            font-size: 0.85rem;
-            color: #636e72;
+        .current-file {
+            background: #e8f4f8;
+            padding: 10px 15px;
+            border-radius: 8px;
             margin-top: -15px;
             margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .current-file a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .current-file a:hover {
+            text-decoration: underline;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            list-style: none;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+        }
+
+        .messages .success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .messages .error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
         }
 
         @media (max-width: 768px) {
             .container {
                 padding: 25px 20px;
-                margin: 20px;
             }
         }
     </style>
 </head>
 <body>
+<header>
+    <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+</header>
+<div style="padding: 20px;">
 <div class="container">
-    <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
-    <h2>📝 Yangi Post Qo'shish</h2>
+    <a href="{% url 'my_posts' %}" class="back-link">← Mening postlarimga qaytish</a>
+    <h2>✏️ Postni Tahrirlash</h2>
 
     {% if messages %}
         <ul class="messages">
@@ -246,7 +262,6 @@
 
         <label for="id_tags">🏷️ Teglar (bir nechta tanlang - Ctrl/Cmd tugmasini bosib)</label>
         {{ form.tags }}
-        <p class="help-text">Bir nechta teg tanlash uchun Ctrl (Windows) yoki Cmd (Mac) tugmasini bosib, tegni tanlang</p>
         {% if form.tags.errors %}
             <ul class="errorlist">{{ form.tags.errors }}</ul>
         {% endif %}
@@ -262,14 +277,24 @@
         {% if form.image.errors %}
             <ul class="errorlist">{{ form.image.errors }}</ul>
         {% endif %}
+        {% if form.instance.image %}
+            <div class="current-file">
+                <strong>Joriy rasm:</strong> <a href="{{ form.instance.image.url }}" target="_blank">{{ form.instance.image.name|slice:"-30:" }}</a>
+            </div>
+        {% endif %}
 
         <label for="id_video">🎥 Video yuklash (ixtiyoriy)</label>
         {{ form.video }}
         {% if form.video.errors %}
             <ul class="errorlist">{{ form.video.errors }}</ul>
         {% endif %}
+        {% if form.instance.video %}
+            <div class="current-file">
+                <strong>Joriy video:</strong> <a href="{{ form.instance.video.url }}" target="_blank">{{ form.instance.video.name|slice:"-30:" }}</a>
+            </div>
+        {% endif %}
 
-        <button type="submit" class="submit-btn">✅ Postni Yaratish</button>
+        <button type="submit" class="submit-btn">💾 O'zgarishlarni Saqlash</button>
     </form>
     </div>
 </div>

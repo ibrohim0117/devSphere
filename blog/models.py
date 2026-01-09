@@ -59,21 +59,21 @@ class Post(BaseCreatedModel):
 
     @property
     def created_at_plus_5(self):
-        # for i in self.emoji_list:
-        #     print(i)
         return self.created_at + timedelta(hours=5)
 
     @property
     def emoji_set_list(self):
         return self.reactions.values('emoji').annotate(count=Count('id'))
 
-
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        a = 0
-        while Post.objects.filter(slug=self.slug).exists():
-            self.slug += f'{a}'
-            a += 1
+        if not self.slug or self.slug != slugify(self.title):
+            self.slug = slugify(self.title)
+            # Agar slug allaqachon mavjud bo'lsa, raqam qo'shish
+            original_slug = self.slug
+            counter = 1
+            while Post.objects.filter(slug=self.slug).exclude(pk=self.pk if self.pk else None).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
         super().save(*args, **kwargs)
 
 
