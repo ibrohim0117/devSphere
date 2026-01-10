@@ -111,7 +111,17 @@
         form input[type="email"],
         form input[type="url"],
         form textarea,
-        form input[type="file"] {
+        form input[type="file"],
+        #id_avatar,
+        #id_about,
+        #id_facebook,
+        #id_twitter,
+        #id_instagram,
+        #id_linkedin,
+        #id_github,
+        #id_leetcode,
+        #id_telegram,
+        #id_email {
             width: 100%;
             padding: 14px 18px;
             margin-top: 8px;
@@ -122,19 +132,34 @@
             box-sizing: border-box;
             transition: all 0.3s;
             outline: none;
+            font-family: inherit;
         }
 
         form input[type="text"]:focus,
         form input[type="email"]:focus,
         form input[type="url"]:focus,
-        form textarea:focus {
+        form textarea:focus,
+        #id_avatar:focus,
+        #id_about:focus,
+        #id_facebook:focus,
+        #id_twitter:focus,
+        #id_instagram:focus,
+        #id_linkedin:focus,
+        #id_github:focus,
+        #id_leetcode:focus,
+        #id_telegram:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        form input[type="email"][readonly] {
+        form input[type="email"][readonly],
+        #id_email[readonly] {
             background: #f8f9fa;
             cursor: not-allowed;
+        }
+
+        #id_avatar {
+            padding: 10px;
         }
 
         textarea {
@@ -243,43 +268,84 @@
             {% csrf_token %}
 
             {% if user.avatar %}
-                <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar-preview" />
+                <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar-preview" id="avatar-preview" />
             {% else %}
-                <img src="https://ui-avatars.com/api/?name={{ user.email|slice:":1" }}&background=667eea&color=fff&size=150" alt="Avatar" class="avatar-preview" />
+                <img src="https://ui-avatars.com/api/?name={{ user.email|slice:":1" }}&background=667eea&color=fff&size=150" alt="Avatar" class="avatar-preview" id="avatar-preview" />
             {% endif %}
 
             <label for="id_avatar">📷 Profil rasmi (avatar):</label>
-            <input type="file" name="avatar" id="id_avatar" accept="image/*" />
+            {{ form.avatar }}
+            {% if form.avatar.errors %}
+                <div class="error-message">{{ form.avatar.errors }}</div>
+            {% endif %}
 
             <label for="id_about">📝 O'zingiz haqingizda:</label>
-            <textarea name="about" id="id_about" placeholder="O'zingiz haqingizda yozing...">{{ user.about }}</textarea>
+            {{ form.about }}
+            {% if form.about.errors %}
+                <div class="error-message">{{ form.about.errors }}</div>
+            {% endif %}
 
             <label for="id_email">📧 Email:</label>
-            <input type="email" name="email" id="id_email" value="{{ user.email }}" readonly />
+            <input type="email" name="email_display" id="id_email" value="{{ user.email }}" readonly style="background: #f8f9fa; cursor: not-allowed;" />
 
             <label for="id_facebook">📘 Facebook URL:</label>
-            <input type="url" name="facebook" id="id_facebook" value="{{ user.facebook|default_if_none:'' }}" placeholder="https://facebook.com/..." />
+            {{ form.facebook }}
+            {% if form.facebook.errors %}
+                <div class="error-message">{{ form.facebook.errors }}</div>
+            {% endif %}
 
             <label for="id_twitter">🐦 Twitter URL:</label>
-            <input type="url" name="twitter" id="id_twitter" value="{{ user.twitter|default_if_none:'' }}" placeholder="https://twitter.com/..." />
+            {{ form.twitter }}
+            {% if form.twitter.errors %}
+                <div class="error-message">{{ form.twitter.errors }}</div>
+            {% endif %}
 
             <label for="id_instagram">📷 Instagram URL:</label>
-            <input type="url" name="instagram" id="id_instagram" value="{{ user.instagram|default_if_none:'' }}" placeholder="https://instagram.com/..." />
+            {{ form.instagram }}
+            {% if form.instagram.errors %}
+                <div class="error-message">{{ form.instagram.errors }}</div>
+            {% endif %}
 
             <label for="id_linkedin">💼 LinkedIn URL:</label>
-            <input type="url" name="linkedin" id="id_linkedin" value="{{ user.linkedin|default_if_none:'' }}" placeholder="https://linkedin.com/in/..." />
+            {{ form.linkedin }}
+            {% if form.linkedin.errors %}
+                <div class="error-message">{{ form.linkedin.errors }}</div>
+            {% endif %}
 
             <label for="id_github">💻 GitHub URL:</label>
-            <input type="url" name="github" id="id_github" value="{{ user.github|default_if_none:'' }}" placeholder="https://github.com/..." />
+            {{ form.github }}
+            {% if form.github.errors %}
+                <div class="error-message">{{ form.github.errors }}</div>
+            {% endif %}
 
             <label for="id_leetcode">⚡ LeetCode URL:</label>
-            <input type="url" name="leetcode" id="id_leetcode" value="{{ user.leetcode|default_if_none:'' }}" placeholder="https://leetcode.com/..." />
+            {{ form.leetcode }}
+            {% if form.leetcode.errors %}
+                <div class="error-message">{{ form.leetcode.errors }}</div>
+            {% endif %}
 
             <label for="id_telegram">✈️ Telegram URL:</label>
-            <input type="url" name="telegram" id="id_telegram" value="{{ user.telegram|default_if_none:'' }}" placeholder="https://t.me/..." />
+            {{ form.telegram }}
+            {% if form.telegram.errors %}
+                <div class="error-message">{{ form.telegram.errors }}</div>
+            {% endif %}
 
             <button type="submit">💾 Saqlash</button>
         </form>
+
+        <script>
+            // Avatar preview yangilash
+            document.getElementById('id_avatar').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('avatar-preview').src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
 
         <div class="buttons-container">
             <a href="{% url 'post_create' %}" class="action-link">➕ Post yozish</a>

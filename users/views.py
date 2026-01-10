@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import RegisterForm, UserLoginForm
+from .forms import RegisterForm, UserLoginForm, ProfileForm
 from .tasks import send_verification_email
 from .models import User, EmailConfirmation
 from .mixins import NotLoginRequiredMixin
@@ -118,12 +118,8 @@ class LogoutRedirectView(LoginRequiredMixin, View):
 
 class ProfileView(LoginRequiredMixin, UpdateView):
     model = User
+    form_class = ProfileForm
     template_name = 'profile.html'
-    fields = [
-        'avatar', 'about', 'email', 'facebook', 'twitter',
-        'instagram', 'linkedin', 'github', 'leetcode',
-        'telegram'
-    ]
     login_url = reverse_lazy('login')
     success_url = reverse_lazy('profile')
 
@@ -131,10 +127,15 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
     def form_valid(self, form):
+        # Email o'zgartirilmasligini ta'minlash
+        form.instance.email = self.request.user.email
         messages.success(self.request, 'Profil muvaffaqiyatli yangilandi!')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Xatolik: iltimos ma\'lumotlarni to‘g‘ri to‘ldiring.')
+        # Form xatolarini ko'rsatish
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f'{field}: {error}')
         return super().form_invalid(form)
 

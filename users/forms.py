@@ -27,3 +27,37 @@ class RegisterForm(forms.Form):
 class UserLoginForm(forms.Form):
     email = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ProfileForm(forms.ModelForm):
+    """Profilni yangilash uchun form. Email maydoni yo'q."""
+    class Meta:
+        model = User
+        fields = [
+            'avatar', 'about', 'facebook', 'twitter',
+            'instagram', 'linkedin', 'github', 'leetcode',
+            'telegram'
+        ]
+        widgets = {
+            'about': forms.Textarea(attrs={
+                'placeholder': "O'zingiz haqingizda yozing...",
+                'rows': 5
+            }),
+            'facebook': forms.URLInput(attrs={'placeholder': 'https://facebook.com/...'}),
+            'twitter': forms.URLInput(attrs={'placeholder': 'https://twitter.com/...'}),
+            'instagram': forms.URLInput(attrs={'placeholder': 'https://instagram.com/...'}),
+            'linkedin': forms.URLInput(attrs={'placeholder': 'https://linkedin.com/in/...'}),
+            'github': forms.URLInput(attrs={'placeholder': 'https://github.com/...'}),
+            'leetcode': forms.URLInput(attrs={'placeholder': 'https://leetcode.com/...'}),
+            'telegram': forms.URLInput(attrs={'placeholder': 'https://t.me/...'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Barcha maydonlarni ixtiyoriy qilish
+        for field_name, field in self.fields.items():
+            field.required = False
+            if field_name == 'avatar':
+                field.widget.attrs.update({
+                    'accept': 'image/*',
+                })

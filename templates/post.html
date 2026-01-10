@@ -89,21 +89,25 @@
 
         .post-image {
             width: 100%;
-            max-width: 100%;
+            max-width: 900px;
+            max-height: 600px;
             height: auto;
             border-radius: 15px;
-            margin-bottom: 30px;
+            margin: 30px auto;
             display: block;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transition: transform 0.3s;
+            object-fit: contain;
         }
 
         .post-image:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         }
 
         .video-container {
-            margin: 30px 0;
+            margin: 30px auto;
+            max-width: 900px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -111,7 +115,9 @@
 
         .video-container video {
             width: 100%;
+            max-height: 600px;
             display: block;
+            object-fit: contain;
         }
 
         .category {
@@ -309,6 +315,21 @@
 
             .post-content {
                 font-size: 1rem;
+            }
+
+            .post-image {
+                max-width: 100%;
+                max-height: 400px;
+                margin: 20px 0;
+            }
+
+            .video-container {
+                max-width: 100%;
+                margin: 20px 0;
+            }
+
+            .video-container video {
+                max-height: 400px;
             }
 
             .emojis span {
