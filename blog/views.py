@@ -1,8 +1,8 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
-    TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+    TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
 )
 from django.contrib import messages
 from django.db.models import F, Prefetch
@@ -16,34 +16,34 @@ from .forms import PostCreateForm, CommentForm
 from .utils import get_client_ip
 
 
-def react_to_post(request, post_id):
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Noto\'g\'ri so\'rov turi'}, status=405)
+class ReactToPostView(View):
+    """Postga reaction qo'shish uchun class-based view"""
     
-    try:
-        emoji = request.POST.get('emoji')
-        if not emoji:
-            return JsonResponse({'error': 'Emoji tanlanmagan'}, status=400)
-        
-        # Emoji validation
-        valid_emojis = [choice[0] for choice in Reaction.EMOJI_CHOICES]
-        if emoji not in valid_emojis:
-            return JsonResponse({'error': 'Noto\'g\'ri emoji'}, status=400)
-        
+    def post(self, request, post_id):
         try:
-            post = Post.objects.get(id=post_id, is_active=True)
-        except Post.DoesNotExist:
-            return JsonResponse({'error': 'Post topilmadi'}, status=404)
-        
-        ip_address = get_client_ip(request)
-        if Reaction.objects.filter(post=post, ip_address=ip_address).exists():
-            return JsonResponse({'error': 'Siz allaqachon ovoz bergansiz!'}, status=400)
+            emoji = request.POST.get('emoji')
+            if not emoji:
+                return JsonResponse({'error': 'Emoji tanlanmagan'}, status=400)
+            
+            # Emoji validation
+            valid_emojis = [choice[0] for choice in Reaction.EMOJI_CHOICES]
+            if emoji not in valid_emojis:
+                return JsonResponse({'error': 'Noto\'g\'ri emoji'}, status=400)
+            
+            try:
+                post = Post.objects.get(id=post_id, is_active=True)
+            except Post.DoesNotExist:
+                return JsonResponse({'error': 'Post topilmadi'}, status=404)
+            
+            ip_address = get_client_ip(request)
+            if Reaction.objects.filter(post=post, ip_address=ip_address).exists():
+                return JsonResponse({'error': 'Siz allaqachon ovoz bergansiz!'}, status=400)
 
-        Reaction.objects.create(post=post, emoji=emoji, ip_address=ip_address)
-        return JsonResponse({'success': True})
-    
-    except Exception as e:
-        return JsonResponse({'error': 'Xatolik yuz berdi'}, status=500)
+            Reaction.objects.create(post=post, emoji=emoji, ip_address=ip_address)
+            return JsonResponse({'success': True})
+        
+        except Exception as e:
+            return JsonResponse({'error': 'Xatolik yuz berdi'}, status=500)
 
 
 class HomeView(ListView):
@@ -268,72 +268,79 @@ class AdminPostsView(UserPassesTestMixin, ListView):
         return data
 
 
-def toggle_post_status(request, post_id):
-    """Superuser uchun post holatini o'zgartirish"""
-    if not request.user.is_authenticated or not request.user.is_superuser:
-        messages.error(request, "Sizda bu funksiyani ishlatish huquqi yo'q!")
-        return redirect('home')
+class TogglePostStatusView(UserPassesTestMixin, View):
+    """Superuser uchun post holatini o'zgartirish class-based view"""
     
-    post = get_object_or_404(Post, id=post_id)
-    post.is_active = not post.is_active
-    post.save()
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
     
-    status = "faollashtirildi" if post.is_active else "o'chirildi"
-    messages.success(request, f"✅ Post muvaffaqiyatli {status}!")
+    def get(self, request, post_id):
+        return self.handle_toggle(post_id)
     
-    # Qaysi sahifadan kelgan bo'lsa, o'sha sahifaga qaytish
-    referer = request.META.get('HTTP_REFERER', reverse_lazy('admin_posts'))
-    return redirect(referer)
+    def post(self, request, post_id):
+        return self.handle_toggle(post_id)
+    
+    def handle_toggle(self, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        post.is_active = not post.is_active
+        post.save()
+        
+        status = "faollashtirildi" if post.is_active else "o'chirildi"
+        messages.success(self.request, f"✅ Post muvaffaqiyatli {status}!")
+        
+        # Qaysi sahifadan kelgan bo'lsa, o'sha sahifaga qaytish
+        referer = self.request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        return redirect(reverse('admin_posts'))
 
 
-def add_comment(request, post_slug):
-    """Post ga comment qo'shish"""
-    if not request.user.is_authenticated:
-        messages.error(request, "Izoh yozish uchun tizimga kirishingiz kerak!")
-        return redirect('login')
+class AddCommentView(LoginRequiredMixin, View):
+    """Post ga comment qo'shish class-based view"""
+    login_url = reverse_lazy('login')
     
-    if request.method != 'POST':
+    def post(self, request, post_slug):
+        post = get_object_or_404(Post, slug=post_slug, is_active=True)
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            messages.success(request, "✅ Izohingiz muvaffaqiyatli qo'shildi!")
+        else:
+            messages.error(request, "Xatolik: iltimos, izohingizni to'g'ri to'ldiring.")
+        
         return redirect('post', slug=post_slug)
     
-    post = get_object_or_404(Post, slug=post_slug, is_active=True)
-    form = CommentForm(request.POST)
-    
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.post = post
-        comment.author = request.user
-        comment.save()
-        messages.success(request, "✅ Izohingiz muvaffaqiyatli qo'shildi!")
-    else:
-        messages.error(request, "Xatolik: iltimos, izohingizni to'g'ri to'ldiring.")
-    
-    return redirect('post', slug=post_slug)
+    def get(self, request, post_slug):
+        return redirect('post', slug=post_slug)
 
 
-def reply_comment(request, post_slug, comment_id):
-    """Commentga reply qilish"""
-    if not request.user.is_authenticated:
-        messages.error(request, "Javob yozish uchun tizimga kirishingiz kerak!")
-        return redirect('login')
+class ReplyCommentView(LoginRequiredMixin, View):
+    """Commentga reply qilish class-based view"""
+    login_url = reverse_lazy('login')
     
-    if request.method != 'POST':
+    def post(self, request, post_slug, comment_id):
+        post = get_object_or_404(Post, slug=post_slug, is_active=True)
+        parent_comment = get_object_or_404(Comment, id=comment_id, post=post, is_active=True)
+        form = CommentForm(request.POST)
+        
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.post = post
+            reply.author = request.user
+            reply.parent = parent_comment
+            reply.save()
+            messages.success(request, "✅ Javobingiz muvaffaqiyatli qo'shildi!")
+        else:
+            messages.error(request, "Xatolik: iltimos, javobingizni to'g'ri to'ldiring.")
+        
         return redirect('post', slug=post_slug)
     
-    post = get_object_or_404(Post, slug=post_slug, is_active=True)
-    parent_comment = get_object_or_404(Comment, id=comment_id, post=post, is_active=True)
-    form = CommentForm(request.POST)
-    
-    if form.is_valid():
-        reply = form.save(commit=False)
-        reply.post = post
-        reply.author = request.user
-        reply.parent = parent_comment
-        reply.save()
-        messages.success(request, "✅ Javobingiz muvaffaqiyatli qo'shildi!")
-    else:
-        messages.error(request, "Xatolik: iltimos, javobingizni to'g'ri to'ldiring.")
-    
-    return redirect('post', slug=post_slug)
+    def get(self, request, post_slug, comment_id):
+        return redirect('post', slug=post_slug)
 
 
 

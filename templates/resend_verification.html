@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yangi tasdiqlash linki - devSphere</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+<header>
+    <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+</header>
+<div class="content-wrapper">
+    <div class="login-container">
+        <div class="logo">📧</div>
+        <h2>Yangi Tasdiqlash Linki</h2>
+        
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="form-errors">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <p style="margin-bottom: 25px; color: #636e72; text-align: center; line-height: 1.6;">
+            Tasdiqlash linkining muddati o'tgan bo'lsa yoki linkni yo'qotgan bo'lsangiz, 
+            emailingizni kiriting va yangi link oling.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="form-errors">
+                    <ul>
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <button type="submit">📤 Yangi Link Yuborish</button>
+        </form>
+
+        <div class="login-link" style="margin-top: 25px;">
+            <a href="{% url 'register' %}">Ro'yxatdan o'tish</a> | 
+            <a href="{% url 'login' %}">Kirish</a>
+        </div>
+
+        <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
+    </div>
+</div>
+</body>
+</html>

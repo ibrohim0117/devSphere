@@ -68,6 +68,11 @@
             Allaqachon hisobingiz bormi? <a href="{% url 'login' %}">Kirish</a>
         </div>
 
+        <div class="login-link" style="margin-top: 15px;">
+            Tasdiqlash linki o'tgan yoki yo'qolganmi? 
+            <a href="{% url 'resend_verification' %}">📧 Yangi link olish</a>
+        </div>
+
         <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
     </div>
 </div>

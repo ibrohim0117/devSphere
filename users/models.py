@@ -56,18 +56,21 @@ class EmailConfirmation(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     token = models.UUIDField(default=uuid.uuid4, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(default=timezone.now)
+    expires_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
 
     def save(self, *args, **kwargs):
-        if not self.expires_at:
-            # Token 24 soat davomida amal qiladi
+        # Token 24 soat davomida amal qiladi
+        if not self.expires_at or not self.pk:
             self.expires_at = timezone.now() + timedelta(hours=24)
         super().save(*args, **kwargs)
 
     def is_expired(self):
+        """Token muddati o'tganligini tekshirish"""
+        if not self.expires_at:
+            return True
         return timezone.now() > self.expires_at
 
     def __str__(self):

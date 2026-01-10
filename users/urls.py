@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     RegisterView, VerifyEmailView, LogoutRedirectView,
-    UserLoginView, ProfileView
+    UserLoginView, ProfileView, ResendVerificationEmailView
 )
 
 
@@ -11,7 +11,7 @@ urlpatterns = [
     path("logout/", LogoutRedirectView.as_view(), name="logout"),
 
     path("verify-email/<uuid:token>/", VerifyEmailView.as_view(), name="verify-email"),
+    path("resend-verification/", ResendVerificationEmailView.as_view(), name="resend_verification"),
 
     path('profile/', ProfileView.as_view(), name='profile'),
-
 ]

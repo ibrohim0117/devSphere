@@ -55,6 +55,11 @@
             Hisobingiz yo'qmi? <a href="{% url 'register' %}">Ro'yxatdan o'ting</a>
         </div>
 
+        <div class="register-link" style="margin-top: 15px;">
+            Tasdiqlash linki o'tgan yoki yo'qolganmi? 
+            <a href="{% url 'resend_verification' %}">📧 Yangi link olish</a>
+        </div>
+
         <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
     </div>
 </div>

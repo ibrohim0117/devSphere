@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import RegisterForm, UserLoginForm, ProfileForm
+from .forms import RegisterForm, UserLoginForm, ProfileForm, ResendVerificationEmailForm
 from .tasks import send_verification_email
 from .models import User, EmailConfirmation
 from .mixins import NotLoginRequiredMixin
@@ -50,24 +50,36 @@ class RegisterView(NotLoginRequiredMixin, TemplateView):
 
 
 class VerifyEmailView(View):
+    """Email tasdiqlash uchun class-based view"""
+    
     def get(self, request, token, *args, **kwargs):
         try:
             confirmation = EmailConfirmation.objects.get(token=token)
         except EmailConfirmation.DoesNotExist:
-            messages.error(request, "Noto'g'ri yoki muddati o'tgan tasdiqlash linki.")
-            return redirect('register')
+            messages.error(
+                request, 
+                "❌ Noto'g'ri tasdiqlash linki. Agar linkning muddati o'tgan bo'lsa, "
+                "yangi link olish uchun emailingizni kiriting."
+            )
+            return redirect('resend_verification')
 
         # Token muddatini tekshirish
         if confirmation.is_expired():
+            user_email = confirmation.user.email
             confirmation.delete()
-            messages.error(request, "Tasdiqlash linki muddati o'tgan. Iltimos, qayta ro'yxatdan o'ting.")
-            return redirect('register')
+            messages.warning(
+                request, 
+                f"⏰ Tasdiqlash linki muddati o'tgan. Link faqat 24 soat davomida amal qiladi. "
+                f"Yangi link olish uchun emailingizni kiriting."
+            )
+            # Yangi link olish sahifasiga redirect qilish, email parametr bilan
+            return redirect(f"{reverse('resend_verification')}?email={user_email}")
 
         user = confirmation.user
         
         # Agar allaqachon tasdiqlangan bo'lsa
         if user.is_verified and user.is_active:
-            messages.info(request, "Email allaqachon tasdiqlangan.")
+            messages.info(request, "ℹ️ Email allaqachon tasdiqlangan. Tizimga kirildi.")
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
 
@@ -80,7 +92,7 @@ class VerifyEmailView(View):
 
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-        messages.success(request, "Email muvaffaqiyatli tasdiqlandi va siz tizimga kirdingiz!")
+        messages.success(request, "✅ Email muvaffaqiyatli tasdiqlandi va siz tizimga kirdingiz!")
         return redirect('home')
 
 
@@ -138,4 +150,49 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             for error in errors:
                 messages.error(self.request, f'{field}: {error}')
         return super().form_invalid(form)
+
+
+class ResendVerificationEmailView(NotLoginRequiredMixin, FormView):
+    """Yangi tasdiqlash linkini yuborish uchun class-based view"""
+    form_class = ResendVerificationEmailForm
+    template_name = 'resend_verification.html'
+    success_url = reverse_lazy('login')
+    
+    def get_initial(self):
+        """GET parametrdan email parametrini olish"""
+        initial = super().get_initial()
+        email = self.request.GET.get('email')
+        if email:
+            initial['email'] = email
+        return initial
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.get(email=email)
+        
+        # Eski tokenlarni o'chirish (expired yoki faol)
+        EmailConfirmation.objects.filter(user=user).delete()
+        
+        # Yangi token yaratish
+        token = uuid.uuid4()
+        EmailConfirmation.objects.create(user=user, token=token)
+        
+        # Yangi tasdiqlash linkini yuborish
+        verification_link = self.request.build_absolute_uri(
+            reverse('verify-email', kwargs={'token': str(token)})
+        )
+        
+        send_verification_email.delay(
+            subject='Yangi tasdiqlash havolasi - devSphere',
+            message=f"Yangi tasdiqlash havolasi:\n{verification_link}\n\nBu link 24 soat davomida amal qiladi.",
+            from_email='ibrohim.dev.uz@gmail.com',
+            recipient_list=[email]
+        )
+        
+        messages.success(
+            self.request, 
+            f"✅ Yangi tasdiqlash linki {email} manziliga yuborildi! "
+            f"Iltimos, emailingizni tekshiring. Link 24 soat davomida amal qiladi."
+        )
+        return super().form_valid(form)
 

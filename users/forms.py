@@ -29,6 +29,28 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
+class ResendVerificationEmailForm(forms.Form):
+    """Yangi tasdiqlash linkini yuborish uchun form"""
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'placeholder': '📧 Email manzilingizni kiriting',
+            'class': 'form-control'
+        }),
+        label='Email'
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            user = User.objects.get(email=email)
+            # Agar user allaqachon tasdiqlangan bo'lsa
+            if user.is_verified and user.is_active:
+                raise forms.ValidationError("Bu email allaqachon tasdiqlangan. Tizimga kirishingiz mumkin.")
+        except User.DoesNotExist:
+            raise forms.ValidationError("Bu email bilan ro'yxatdan o'tilmagan. Avval ro'yxatdan o'ting.")
+        return email
+
+
 class ProfileForm(forms.ModelForm):
     """Profilni yangilash uchun form. Email maydoni yo'q."""
     class Meta:
