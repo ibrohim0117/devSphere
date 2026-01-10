@@ -1,4 +1,5 @@
 from django import forms
+from ckeditor.widgets import CKEditorWidget
 from .models import Post
 
 
@@ -10,7 +11,7 @@ class PostCreateForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Post sarlavhasi'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
             'tags': forms.SelectMultiple(attrs={'class': 'form-control', 'size': 5}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10}),
+            'content': CKEditorWidget(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
         }

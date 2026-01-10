@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Yangi Post Qo'shish - devSphere</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ form.media }}
     <style>
         * {
             margin: 0;
@@ -137,6 +138,28 @@
             font-family: inherit;
         }
 
+        /* CKEditor Styling */
+        .cke_chrome {
+            border-radius: 12px !important;
+            border: 2px solid #e0e0e0 !important;
+            overflow: hidden;
+        }
+
+        .cke_top {
+            background: #f8f9fa !important;
+            border-bottom: 1px solid #e0e0e0 !important;
+        }
+
+        .cke_contents {
+            border-radius: 0 0 10px 10px !important;
+            min-height: 400px !important;
+        }
+
+        .cke_focus {
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+        }
+
         select[multiple] {
             height: 150px;
             padding: 10px;
@@ -162,19 +185,29 @@
         }
 
         .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
             color: white;
             text-decoration: none;
             font-weight: 600;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            font-size: 15px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            border-radius: 12px;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
         }
 
         .back-link:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .errorlist {

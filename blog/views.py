@@ -98,6 +98,7 @@ class PostDetailView(DetailView):
 
     def get_object(self, queryset=None):
         post = super().get_object(queryset)
+        # Faqat bitta marta views sonini oshirish
         # F() expression bilan race condition'ni oldini olish
         Post.objects.filter(id=post.id).update(views=F('views') + 1)
         post.refresh_from_db()
@@ -105,7 +106,8 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        post = self.get_object()
+        # get_object() allaqachon chaqirilgan, shuning uchun self.object dan foydalanish
+        post = self.object
         # O'z post'ini olib tashlash
         data['related_posts'] = Post.objects.filter(
             category=post.category,
@@ -162,7 +164,8 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         post = get_object_or_404(Post, slug=self.kwargs['slug'])
-        if post.author != self.request.user:
+        # Superuser barcha postlarni tahrirlay oladi
+        if not self.request.user.is_superuser and post.author != self.request.user:
             from django.core.exceptions import PermissionDenied
             raise PermissionDenied("Siz bu postni tahrirlash huquqiga ega emassiz!")
         return post
@@ -173,8 +176,20 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         data['tags'] = Tag.objects.all()
         return data
 
+    def form_valid(self, form):
+        # Faqat oddiy userlar tahrirlaganda is_active=False qilamiz
+        # Superuser tahrirlaganda is_active holati o'zgarmaydi
+        if not self.request.user.is_superuser:
+            # User postni tahrirlaganda, post yana admin tomonidan ko'rib chiqilishi kerak
+            # Shuning uchun is_active=False qilamiz
+            form.instance.is_active = False
+            messages.success(self.request, "✅ Post muvaffaqiyatli yangilandi va adminga yuborildi! Admin tasdiqlagandan keyin post saytda ko'rinadi.")
+        else:
+            # Superuser tahrirlaganda
+            messages.success(self.request, "✅ Post muvaffaqiyatli yangilandi!")
+        return super().form_valid(form)
+
     def get_success_url(self):
-        messages.success(self.request, "✅ Post muvaffaqiyatli yangilandi!")
         return reverse_lazy('my_posts')
 
 
