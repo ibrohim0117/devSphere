@@ -10,9 +10,9 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect
 
 
-from .models import Post, Category, Tag, Reaction
+from .models import Post, Category, Tag, Reaction, Comment
 from .filter_manager import FilterManager
-from .forms import PostCreateForm
+from .forms import PostCreateForm, CommentForm
 from .utils import get_client_ip
 
 
@@ -113,6 +113,23 @@ class PostDetailView(DetailView):
             category=post.category,
             is_active=True
         ).exclude(id=post.id).select_related('author', 'category').prefetch_related('tags')[:5]
+        
+        # Commentlar va form
+        data['comment_form'] = CommentForm()
+        # Faqat active commentlar va parent=None bo'lganlar (reply emas)
+        # Replies ham faqat active bo'lganlarini olish
+        top_level_comments = post.comments.filter(
+            is_active=True, 
+            parent=None
+        ).select_related('author').prefetch_related(
+            Prefetch(
+                'replies',
+                queryset=Comment.objects.filter(is_active=True).select_related('author'),
+                to_attr='active_replies'
+            )
+        ).order_by('-created_at')
+        data['comments'] = top_level_comments
+        
         return data
 
 
@@ -267,6 +284,56 @@ def toggle_post_status(request, post_id):
     # Qaysi sahifadan kelgan bo'lsa, o'sha sahifaga qaytish
     referer = request.META.get('HTTP_REFERER', reverse_lazy('admin_posts'))
     return redirect(referer)
+
+
+def add_comment(request, post_slug):
+    """Post ga comment qo'shish"""
+    if not request.user.is_authenticated:
+        messages.error(request, "Izoh yozish uchun tizimga kirishingiz kerak!")
+        return redirect('login')
+    
+    if request.method != 'POST':
+        return redirect('post', slug=post_slug)
+    
+    post = get_object_or_404(Post, slug=post_slug, is_active=True)
+    form = CommentForm(request.POST)
+    
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.author = request.user
+        comment.save()
+        messages.success(request, "✅ Izohingiz muvaffaqiyatli qo'shildi!")
+    else:
+        messages.error(request, "Xatolik: iltimos, izohingizni to'g'ri to'ldiring.")
+    
+    return redirect('post', slug=post_slug)
+
+
+def reply_comment(request, post_slug, comment_id):
+    """Commentga reply qilish"""
+    if not request.user.is_authenticated:
+        messages.error(request, "Javob yozish uchun tizimga kirishingiz kerak!")
+        return redirect('login')
+    
+    if request.method != 'POST':
+        return redirect('post', slug=post_slug)
+    
+    post = get_object_or_404(Post, slug=post_slug, is_active=True)
+    parent_comment = get_object_or_404(Comment, id=comment_id, post=post, is_active=True)
+    form = CommentForm(request.POST)
+    
+    if form.is_valid():
+        reply = form.save(commit=False)
+        reply.post = post
+        reply.author = request.user
+        reply.parent = parent_comment
+        reply.save()
+        messages.success(request, "✅ Javobingiz muvaffaqiyatli qo'shildi!")
+    else:
+        messages.error(request, "Xatolik: iltimos, javobingizni to'g'ri to'ldiring.")
+    
+    return redirect('post', slug=post_slug)
 
 
 

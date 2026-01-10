@@ -1,6 +1,6 @@
 from django import forms
 from ckeditor.widgets import CKEditorWidget
-from .models import Post
+from .models import Post, Comment
 
 
 class PostCreateForm(forms.ModelForm):
@@ -45,5 +45,27 @@ class PostCreateForm(forms.ModelForm):
                     raise forms.ValidationError('Kamida bitta rasm yoki video qo\'shishingiz kerak')
         
         return cleaned_data
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Fikringizni yozing...',
+                'maxlength': 1000
+            }),
+        }
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content')
+        if not content or len(content.strip()) < 3:
+            raise forms.ValidationError('Izoh kamida 3 ta belgidan iborat bo\'lishi kerak')
+        if len(content.strip()) > 1000:
+            raise forms.ValidationError('Izoh 1000 ta belgidan oshmasligi kerak')
+        return content.strip()
 
 

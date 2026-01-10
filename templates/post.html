@@ -303,6 +303,40 @@
             color: #764ba2;
         }
 
+        /* Comments Styling */
+        .reply-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        #id_content {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.3s;
+        }
+
+        #id_content:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .comment-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .reply-item:hover {
+            transform: translateX(5px);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 25px 20px;
@@ -335,6 +369,18 @@
             .emojis span {
                 font-size: 2rem;
                 margin: 0 5px;
+            }
+
+            .comments-section {
+                margin-top: 30px !important;
+            }
+
+            .comment-item {
+                padding: 15px !important;
+            }
+
+            .replies {
+                padding-left: 10px !important;
             }
         }
     </style>
@@ -411,6 +457,94 @@
             </div>
         {% endif %}
 
+        <!-- Comments Section -->
+        <div class="comments-section" style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 25px; color: #2d3436;">💬 Izohlar ({{ comments.count }})</h3>
+            
+            {% if request.user.is_authenticated %}
+                <div class="comment-form-container" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <form method="POST" action="{% url 'add_comment' post.slug %}">
+                        {% csrf_token %}
+                        <label for="id_content" style="display: block; margin-bottom: 10px; font-weight: 600; color: #2d3436;">Fikringizni yozing:</label>
+                        {{ comment_form.content }}
+                        {% if comment_form.content.errors %}
+                            <div class="error-message">{{ comment_form.content.errors }}</div>
+                        {% endif %}
+                        <button type="submit" style="margin-top: 15px; padding: 12px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">📝 Izoh qo'shish</button>
+                    </form>
+                </div>
+            {% else %}
+                <div style="background: #fff9e6; padding: 20px; border-radius: 12px; margin-bottom: 30px; border-left: 5px solid #fdcb6e;">
+                    <p style="margin: 0; color: #856404;">Izoh yozish uchun <a href="{% url 'login' %}" style="color: #667eea; font-weight: 600; text-decoration: none;">tizimga kiring</a></p>
+                </div>
+            {% endif %}
+
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment-item" style="background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                        <div class="comment-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="comment-author-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                                    {{ comment.author.email|slice:":1"|upper }}
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #2d3436;">{{ comment.author.email }}</div>
+                                    <div style="font-size: 0.85rem; color: #636e72;">{{ comment.created_at_plus_5|date:"d.m.Y H:i" }}</div>
+                                </div>
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                <button onclick="toggleReplyForm({{ comment.id }})" class="reply-btn" style="background: #e0e0e0; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; transition: all 0.3s;">💬 Javob</button>
+                            {% endif %}
+                        </div>
+                        <div class="comment-content" style="color: #2d3436; line-height: 1.6; margin-bottom: 15px;">
+                            {{ comment.content|linebreaks }}
+                        </div>
+
+                        <!-- Reply Form (hidden by default) -->
+                        {% if request.user.is_authenticated %}
+                            <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                                <form method="POST" action="{% url 'reply_comment' post.slug comment.id %}">
+                                    {% csrf_token %}
+                                    <label for="reply-content-{{ comment.id }}" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3436; font-size: 0.9rem;">Javob yozing:</label>
+                                    <textarea name="content" id="reply-content-{{ comment.id }}" required style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; font-size: 14px; min-height: 100px; resize: vertical;" placeholder="Javobingizni yozing..."></textarea>
+                                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                        <button type="submit" style="padding: 8px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">📤 Yuborish</button>
+                                        <button type="button" onclick="toggleReplyForm({{ comment.id }})" style="padding: 8px 20px; background: #e0e0e0; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: #555;">❌ Bekor qilish</button>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+
+                        <!-- Replies -->
+                        {% if comment.active_replies %}
+                            <div class="replies" style="margin-top: 20px; padding-left: 20px; border-left: 3px solid #e0e0e0;">
+                                {% for reply in comment.active_replies %}
+                                    <div class="reply-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                                        <div class="reply-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                            <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">
+                                                {{ reply.author.email|slice:":1"|upper }}
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; color: #2d3436; font-size: 0.9rem;">{{ reply.author.email }}</div>
+                                                <div style="font-size: 0.8rem; color: #636e72;">{{ reply.created_at_plus_5|date:"d.m.Y H:i" }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="reply-content" style="color: #2d3436; line-height: 1.6; font-size: 0.95rem;">
+                                            {{ reply.content|linebreaks }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; color: #636e72;">
+                        <p style="font-size: 1.1rem; margin: 0;">Hozircha izohlar yo'q. Birinchi izoh yozuvchi siz bo'ling! 💬</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
         {% if related_posts %}
         <div class="related-posts">
             <h3>📚 O'xshash postlar</h3>
@@ -465,6 +599,18 @@
                 console.error('Error:', error);
                 alert('Xatolik yuz berdi');
             });
+        }
+
+        // Reply form toggle
+        function toggleReplyForm(commentId) {
+            const replyForm = document.getElementById('reply-form-' + commentId);
+            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+                replyForm.style.display = 'block';
+                document.getElementById('reply-content-' + commentId).focus();
+            } else {
+                replyForm.style.display = 'none';
+                document.getElementById('reply-content-' + commentId).value = '';
+            }
         }
     </script>
 </body>
