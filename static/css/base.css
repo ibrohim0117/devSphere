@@ -66,10 +66,19 @@ header h1 a:hover {
     font-size: 18px;
     transition: transform 0.3s;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    -webkit-tap-highlight-color: transparent; /* Mobil uchun tap highlight'ni olib tashlash */
+    user-select: none; /* Text selection'ni o'chirish */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .profile-icon:hover {
     transform: scale(1.1);
+}
+
+.profile-icon:active {
+    transform: scale(0.95); /* Tap feedback */
 }
 
 .dropdown-content {
@@ -84,6 +93,7 @@ header h1 a:hover {
     border-radius: 10px;
     overflow: hidden;
     animation: slideDown 0.3s ease;
+    -webkit-tap-highlight-color: transparent; /* Mobil uchun */
 }
 
 @keyframes slideDown {
@@ -158,5 +168,131 @@ header h1 a:hover {
     header {
         flex-wrap: wrap;
         gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 12px 20px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .profile-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        cursor: pointer;
+        /* Mobil uchun hover effektini o'chirish */
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .profile-icon:hover {
+        transform: none; /* Mobil'da hover effekti yo'q */
+    }
+
+    .profile-icon:active {
+        transform: scale(0.9);
+        background: linear-gradient(135deg, #5568d3 0%, #653d8f 100%);
+    }
+
+    .dropdown-content {
+        min-width: 180px;
+        max-width: 250px;
+        right: 0;
+        /* Mobil uchun yaxshiroq ko'rinish */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .dropdown-content a {
+        padding: 14px 18px; /* Mobil uchun kattaroq tap area */
+        font-size: 0.9rem;
+        /* Mobil uchun hover effektini o'chirish */
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+    }
+
+    .dropdown-content a:active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding-left: 22px;
+    }
+
+    .back-link {
+        font-size: 14px;
+        padding: 10px 16px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 10px 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    header h1 {
+        font-size: 1.3rem;
+        margin-bottom: 0;
+        order: 1;
+    }
+
+    header form {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .profile-dropdown {
+        order: 2;
+    }
+
+    .profile-icon {
+        width: 36px; /* Kichik ekranda ham yaxshi ko'rinish uchun */
+        height: 36px;
+        font-size: 16px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .profile-icon:hover {
+        transform: none;
+    }
+
+    .profile-icon:active {
+        transform: scale(0.9);
+    }
+
+    .dropdown-content {
+        min-width: 200px;
+        max-width: calc(100vw - 30px); /* Ekran kengligidan oshmasligi uchun */
+        right: 0;
+        left: auto;
+        /* Mobil'da to'liq ekranda ko'rinish */
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .dropdown-content a {
+        padding: 15px 18px; /* Kattaroq tap area mobil uchun */
+        font-size: 0.9rem;
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+    }
+
+    .dropdown-content a:active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding-left: 23px;
+    }
+
+    .back-link {
+        font-size: 13px;
+        padding: 9px 14px;
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
     }
 }

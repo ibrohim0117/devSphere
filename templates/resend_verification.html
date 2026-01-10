@@ -37,7 +37,7 @@
             </div>
         {% endif %}
         
-        <p style="margin-bottom: 25px; color: #636e72; text-align: center; line-height: 1.6;">
+        <p class="verification-info">
             Tasdiqlash linkining muddati o'tgan bo'lsa yoki linkni yo'qotgan bo'lsangiz, 
             emailingizni kiriting va yangi link oling.
         </p>
@@ -57,7 +57,7 @@
             <button type="submit">📤 Yangi Link Yuborish</button>
         </form>
 
-        <div class="login-link" style="margin-top: 25px;">
+        <div class="login-link verification-links">
             <a href="{% url 'register' %}">Ro'yxatdan o'tish</a> | 
             <a href="{% url 'login' %}">Kirish</a>
         </div>

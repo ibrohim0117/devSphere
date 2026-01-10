@@ -196,13 +196,176 @@ button[type="submit"]:hover {
     padding-left: 20px;
 }
 
+/* Info Text */
+.verification-info {
+    margin-bottom: 25px;
+    color: #636e72;
+    text-align: center;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Verification Links */
+.verification-links {
+    margin-top: 25px;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .login-container,
     .register-container {
         padding: 30px 25px;
+        margin: 15px;
     }
 
     h2 {
         font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .logo {
+        font-size: 2.5rem;
+    }
+
+    .verification-info {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    .form-control {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+
+    button[type="submit"] {
+        font-size: 15px;
+        padding: 12px 0;
+    }
+
+    .social-login button {
+        font-size: 14px;
+        padding: 10px 0;
+    }
+
+    .social-login img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .login-link,
+    .register-link {
+        font-size: 0.9rem;
+        margin-top: 15px;
+    }
+
+    .back-link {
+        font-size: 14px;
+        padding: 10px 16px;
+        margin-top: 20px;
+    }
+
+    .content-wrapper {
+        padding: 15px;
+        min-height: calc(100vh - 60px);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container,
+    .register-container {
+        padding: 25px 20px;
+        margin: 10px;
+        border-radius: 15px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .logo {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+
+    .verification-info {
+        font-size: 0.85rem;
+        margin-bottom: 18px;
+        padding: 0 5px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    .form-control {
+        font-size: 13px;
+        padding: 11px 14px;
+        margin: 8px 0;
+    }
+
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 11px 0;
+        margin-top: 8px;
+    }
+
+    .or-divider {
+        margin: 20px 0;
+        font-size: 0.9rem;
+    }
+
+    .social-login {
+        margin-top: 20px;
+    }
+
+    .social-login button {
+        font-size: 13px;
+        padding: 9px 0;
+        margin-bottom: 10px;
+    }
+
+    .social-login img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .login-link,
+    .register-link {
+        font-size: 0.85rem;
+        margin-top: 12px;
+        line-height: 1.5;
+    }
+
+    .login-link a,
+    .register-link a {
+        word-break: break-word;
+    }
+
+    .back-link {
+        font-size: 13px;
+        padding: 9px 14px;
+        margin-top: 15px;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .content-wrapper {
+        padding: 10px;
+    }
+
+    .messages {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+
+    .form-errors {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .form-errors ul {
+        padding-left: 18px;
     }
 }

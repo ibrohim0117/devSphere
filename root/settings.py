@@ -36,9 +36,29 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
 ]
 
-# CSRF (serverda https domen qo‘shish kerak)
+# CSRF (serverda https domen qo'shish kerak)
 csrf_origins = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins.split(",") if origin.strip()] if csrf_origins else []
+
+# Ngrok support - avtomatik ngrok URL'ni olish (test uchun)
+try:
+    import urllib.request
+    import json as json_module
+    ngrok_url_obj = urllib.request.urlopen("http://127.0.0.1:4040/api/tunnels", timeout=2)
+    ngrok_data = json_module.loads(ngrok_url_obj.read().decode())
+    if ngrok_data.get("tunnels"):
+        ngrok_url = ngrok_data["tunnels"][0].get("public_url")
+        if ngrok_url and ngrok_url.startswith("https://"):
+            # Ngrok URL'ni CSRF_TRUSTED_ORIGINS ga qo'shish
+            if ngrok_url not in CSRF_TRUSTED_ORIGINS:
+                CSRF_TRUSTED_ORIGINS.append(ngrok_url)
+                # Ngrok domain'ini ALLOWED_HOSTS ga ham qo'shish (agar "*" bo'lmasa)
+                ngrok_domain = ngrok_url.replace("https://", "").replace("http://", "")
+                if "*" not in ALLOWED_HOSTS and ngrok_domain not in ALLOWED_HOSTS:
+                    ALLOWED_HOSTS.append(ngrok_domain)
+except:
+    # Ngrok ishlamayotgan bo'lsa, xato bermaslik
+    pass
 
 # AUTH
 AUTH_USER_MODEL = "users.User"
