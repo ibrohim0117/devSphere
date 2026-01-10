@@ -5,385 +5,8 @@
     <meta charset="UTF-8">
     <title>{{ post.title }} - devSphere</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            margin-bottom: 30px;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        header h1 a {
-            text-decoration: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            transition: transform 0.3s;
-        }
-
-        header h1 a:hover {
-            transform: scale(1.05);
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 30px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            border-radius: 20px;
-            margin-bottom: 30px;
-        }
-
-        .post-title {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #2d3436;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .meta {
-            font-size: 0.95rem;
-            color: #636e72;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .post-image {
-            width: 100%;
-            max-width: 900px;
-            max-height: 600px;
-            height: auto;
-            border-radius: 15px;
-            margin: 30px auto;
-            display: block;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
-            object-fit: contain;
-        }
-
-        .post-image:hover {
-            transform: scale(1.01);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .video-container {
-            margin: 30px auto;
-            max-width: 900px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        .video-container video {
-            width: 100%;
-            max-height: 600px;
-            display: block;
-            object-fit: contain;
-        }
-
-        .category {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .tags {
-            margin-bottom: 20px;
-        }
-
-        .tags span {
-            background: #e8f4f8;
-            color: #2c3e50;
-            padding: 6px 14px;
-            border-radius: 20px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            display: inline-block;
-            border: 1px solid #ddd;
-            transition: all 0.3s;
-        }
-
-        .tags span:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .emoji-stats {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .emoji-stats span {
-            background: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin-right: 10px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            display: inline-block;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .post-content {
-            font-size: 1.1rem;
-            line-height: 1.9;
-            margin-bottom: 30px;
-            color: #2d3436;
-        }
-
-        .post-content h1, .post-content h2, .post-content h3 {
-            color: #2d3436;
-            margin-top: 25px;
-            margin-bottom: 15px;
-        }
-
-        .post-content p {
-            margin-bottom: 15px;
-        }
-
-        .post-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .views {
-            font-size: 0.95rem;
-            color: #636e72;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .emojis {
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .emojis span {
-            font-size: 2.5rem;
-            cursor: pointer;
-            margin: 0 10px;
-            user-select: none;
-            transition: all 0.3s;
-            filter: grayscale(0.3);
-            display: inline-block;
-        }
-
-        .emojis span:hover {
-            transform: scale(1.4) rotate(5deg);
-            filter: grayscale(0);
-        }
-
-        .admin-panel {
-            margin-top: 40px;
-            padding: 20px;
-            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
-            border-radius: 15px;
-            border-left: 5px solid #fdcb6e;
-        }
-
-        .admin-panel h3 {
-            margin-top: 0;
-            color: #856404;
-            margin-bottom: 15px;
-        }
-
-        .admin-panel a {
-            display: inline-block;
-            margin-right: 10px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .admin-panel a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .related-posts {
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
-
-        .related-posts h3 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #2d3436;
-        }
-
-        .related-posts ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .related-posts li {
-            margin-bottom: 12px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .related-posts li:hover {
-            background: #e8f4f8;
-            transform: translateX(5px);
-        }
-
-        .related-posts a {
-            text-decoration: none;
-            color: #667eea;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .related-posts a:hover {
-            color: #764ba2;
-        }
-
-        /* Comments Styling */
-        .reply-btn:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            color: white !important;
-            transform: translateY(-2px);
-        }
-
-        #id_content {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 15px;
-            resize: vertical;
-            min-height: 120px;
-            transition: all 0.3s;
-        }
-
-        #id_content:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .comment-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        }
-
-        .reply-item:hover {
-            transform: translateX(5px);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 25px 20px;
-                margin: 20px 15px;
-            }
-
-            .post-title {
-                font-size: 1.8rem;
-            }
-
-            .post-content {
-                font-size: 1rem;
-            }
-
-            .post-image {
-                max-width: 100%;
-                max-height: 400px;
-                margin: 20px 0;
-            }
-
-            .video-container {
-                max-width: 100%;
-                margin: 20px 0;
-            }
-
-            .video-container video {
-                max-height: 400px;
-            }
-
-            .emojis span {
-                font-size: 2rem;
-                margin: 0 5px;
-            }
-
-            .comments-section {
-                margin-top: 30px !important;
-            }
-
-            .comment-item {
-                padding: 15px !important;
-            }
-
-            .replies {
-                padding-left: 10px !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/post.css' %}">
 </head>
 <body>
     <header>
@@ -448,9 +71,9 @@
         {% if request.user.is_superuser %}
             <div class="admin-panel">
                 <h3>🔧 Admin Panel</h3>
-                <a href="{% url 'admin_posts' %}" style="background: #3498db; color: white;">📋 Barcha Postlarni Ko'rish</a>
+                <a href="{% url 'admin_posts' %}" class="admin-view">📋 Barcha Postlarni Ko'rish</a>
                 <a href="{% url 'toggle_post_status' post.id %}" 
-                   style="background: {% if post.is_active %}#e74c3c{% else %}#27ae60{% endif %}; color: white;"
+                   class="admin-toggle {% if post.is_active %}active{% endif %}"
                    onclick="return confirm('Post holatini o\'zgartirmoqchimisiz?')">
                     {% if post.is_active %}❌ Nofaol qilish{% else %}✅ Faollashtirish{% endif %}
                 </a>
@@ -458,58 +81,58 @@
         {% endif %}
 
         <!-- Comments Section -->
-        <div class="comments-section" style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
-            <h3 style="font-size: 1.5rem; margin-bottom: 25px; color: #2d3436;">💬 Izohlar ({{ comments.count }})</h3>
+        <div class="comments-section">
+            <h3>💬 Izohlar ({{ comments.count }})</h3>
             
             {% if request.user.is_authenticated %}
-                <div class="comment-form-container" style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                <div class="comment-form-container">
                     <form method="POST" action="{% url 'add_comment' post.slug %}">
                         {% csrf_token %}
-                        <label for="id_content" style="display: block; margin-bottom: 10px; font-weight: 600; color: #2d3436;">Fikringizni yozing:</label>
+                        <label for="id_content">Fikringizni yozing:</label>
                         {{ comment_form.content }}
                         {% if comment_form.content.errors %}
                             <div class="error-message">{{ comment_form.content.errors }}</div>
                         {% endif %}
-                        <button type="submit" style="margin-top: 15px; padding: 12px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">📝 Izoh qo'shish</button>
+                        <button type="submit">📝 Izoh qo'shish</button>
                     </form>
                 </div>
             {% else %}
-                <div style="background: #fff9e6; padding: 20px; border-radius: 12px; margin-bottom: 30px; border-left: 5px solid #fdcb6e;">
-                    <p style="margin: 0; color: #856404;">Izoh yozish uchun <a href="{% url 'login' %}" style="color: #667eea; font-weight: 600; text-decoration: none;">tizimga kiring</a></p>
+                <div class="login-prompt">
+                    <p>Izoh yozish uchun <a href="{% url 'login' %}">tizimga kiring</a></p>
                 </div>
             {% endif %}
 
             <div class="comments-list">
                 {% for comment in comments %}
-                    <div class="comment-item" style="background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                        <div class="comment-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div class="comment-author-avatar" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <div>
+                                <div class="comment-author-avatar">
                                     {{ comment.author.email|slice:":1"|upper }}
                                 </div>
                                 <div>
-                                    <div style="font-weight: 600; color: #2d3436;">{{ comment.author.email }}</div>
-                                    <div style="font-size: 0.85rem; color: #636e72;">{{ comment.created_at_plus_5|date:"d.m.Y H:i" }}</div>
+                                    <div class="comment-author-name">{{ comment.author.email }}</div>
+                                    <div class="comment-date">{{ comment.created_at_plus_5|date:"d.m.Y H:i" }}</div>
                                 </div>
                             </div>
                             {% if request.user.is_authenticated %}
-                                <button onclick="toggleReplyForm({{ comment.id }})" class="reply-btn" style="background: #e0e0e0; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; color: #555; transition: all 0.3s;">💬 Javob</button>
+                                <button onclick="toggleReplyForm({{ comment.id }})" class="reply-btn">💬 Javob</button>
                             {% endif %}
                         </div>
-                        <div class="comment-content" style="color: #2d3436; line-height: 1.6; margin-bottom: 15px;">
+                        <div class="comment-content">
                             {{ comment.content|linebreaks }}
                         </div>
 
                         <!-- Reply Form (hidden by default) -->
                         {% if request.user.is_authenticated %}
-                            <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none; margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div id="reply-form-{{ comment.id }}" class="reply-form">
                                 <form method="POST" action="{% url 'reply_comment' post.slug comment.id %}">
                                     {% csrf_token %}
-                                    <label for="reply-content-{{ comment.id }}" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2d3436; font-size: 0.9rem;">Javob yozing:</label>
-                                    <textarea name="content" id="reply-content-{{ comment.id }}" required style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: inherit; font-size: 14px; min-height: 100px; resize: vertical;" placeholder="Javobingizni yozing..."></textarea>
-                                    <div style="margin-top: 10px; display: flex; gap: 10px;">
-                                        <button type="submit" style="padding: 8px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">📤 Yuborish</button>
-                                        <button type="button" onclick="toggleReplyForm({{ comment.id }})" style="padding: 8px 20px; background: #e0e0e0; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: #555;">❌ Bekor qilish</button>
+                                    <label for="reply-content-{{ comment.id }}">Javob yozing:</label>
+                                    <textarea name="content" id="reply-content-{{ comment.id }}" required placeholder="Javobingizni yozing..."></textarea>
+                                    <div class="reply-form-buttons">
+                                        <button type="submit">📤 Yuborish</button>
+                                        <button type="button" onclick="toggleReplyForm({{ comment.id }})">❌ Bekor qilish</button>
                                     </div>
                                 </form>
                             </div>
@@ -517,19 +140,19 @@
 
                         <!-- Replies -->
                         {% if comment.active_replies %}
-                            <div class="replies" style="margin-top: 20px; padding-left: 20px; border-left: 3px solid #e0e0e0;">
+                            <div class="replies">
                                 {% for reply in comment.active_replies %}
-                                    <div class="reply-item" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
-                                        <div class="reply-header" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                            <div style="width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">
+                                    <div class="reply-item">
+                                        <div class="reply-header">
+                                            <div class="comment-author-avatar">
                                                 {{ reply.author.email|slice:":1"|upper }}
                                             </div>
                                             <div>
-                                                <div style="font-weight: 600; color: #2d3436; font-size: 0.9rem;">{{ reply.author.email }}</div>
-                                                <div style="font-size: 0.8rem; color: #636e72;">{{ reply.created_at_plus_5|date:"d.m.Y H:i" }}</div>
+                                                <div class="reply-author-name">{{ reply.author.email }}</div>
+                                                <div class="reply-date">{{ reply.created_at_plus_5|date:"d.m.Y H:i" }}</div>
                                             </div>
                                         </div>
-                                        <div class="reply-content" style="color: #2d3436; line-height: 1.6; font-size: 0.95rem;">
+                                        <div class="reply-content">
                                             {{ reply.content|linebreaks }}
                                         </div>
                                     </div>
@@ -538,8 +161,8 @@
                         {% endif %}
                     </div>
                 {% empty %}
-                    <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.95); border-radius: 12px; color: #636e72;">
-                        <p style="font-size: 1.1rem; margin: 0;">Hozircha izohlar yo'q. Birinchi izoh yozuvchi siz bo'ling! 💬</p>
+                    <div class="comments-empty">
+                        <p>Hozircha izohlar yo'q. Birinchi izoh yozuvchi siz bo'ling! 💬</p>
                     </div>
                 {% endfor %}
             </div>
@@ -557,61 +180,8 @@
         {% endif %}
     </div>
 
-    <script>
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        function react(span) {
-            const emoji = span.innerText;
-            const postId = span.closest('.emojis').dataset.postId;
-            const csrftoken = getCookie('csrftoken');
-            const url = '{% url "react_to_post" post_id=0 %}'.replace('0', postId);
-    
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({emoji: emoji})
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert(data.error || 'Xatolik yuz berdi');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Xatolik yuz berdi');
-            });
-        }
-
-        // Reply form toggle
-        function toggleReplyForm(commentId) {
-            const replyForm = document.getElementById('reply-form-' + commentId);
-            if (replyForm.style.display === 'none' || replyForm.style.display === '') {
-                replyForm.style.display = 'block';
-                document.getElementById('reply-content-' + commentId).focus();
-            } else {
-                replyForm.style.display = 'none';
-                document.getElementById('reply-content-' + commentId).value = '';
-            }
-        }
-    </script>
+    <div data-react-url="{% url 'react_to_post' post_id=0 %}" style="display: none;"></div>
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/post.js' %}"></script>
 </body>
 </html>

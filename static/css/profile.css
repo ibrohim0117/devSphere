@@ -1,0 +1,183 @@
+/* Profile Page Styles */
+
+.profile-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.profile-container:hover {
+    transform: translateY(-5px);
+}
+
+.profile-container h2 {
+    text-align: center;
+    margin-bottom: 35px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2rem;
+}
+
+.avatar-preview {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #667eea;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s;
+}
+
+.avatar-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.profile-container form label {
+    display: block;
+    margin-top: 20px;
+    font-weight: 600;
+    color: #2d3436;
+    font-size: 0.95rem;
+}
+
+.profile-container form input[type="text"],
+.profile-container form input[type="email"],
+.profile-container form input[type="url"],
+.profile-container form textarea,
+.profile-container form input[type="file"],
+.profile-container #id_avatar,
+.profile-container #id_about,
+.profile-container #id_facebook,
+.profile-container #id_twitter,
+.profile-container #id_instagram,
+.profile-container #id_linkedin,
+.profile-container #id_github,
+.profile-container #id_leetcode,
+.profile-container #id_telegram,
+.profile-container #id_email {
+    width: 100%;
+    padding: 14px 18px;
+    margin-top: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #222;
+    box-sizing: border-box;
+    transition: all 0.3s;
+    outline: none;
+    font-family: inherit;
+}
+
+.profile-container form input:focus,
+.profile-container form textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.profile-container #id_email,
+.profile-container input[readonly] {
+    background: #f8f9fa !important;
+    cursor: not-allowed !important;
+    color: #636e72 !important;
+}
+
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+    border-left: 4px solid #28a745;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+    border-left: 4px solid #dc3545;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.action-link {
+    flex: 1 1 30%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.action-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.profile-container textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.profile-container .submit-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 25px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.profile-container .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.profile-wrapper {
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 30px 25px;
+        margin: 15px;
+    }
+
+    .action-link {
+        flex: 1 1 100%;
+    }
+}

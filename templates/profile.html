@@ -5,254 +5,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Profil - devSphere</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            color: #222;
-        }
-
-        /* Header Styles */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        header h1 a {
-            text-decoration: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            transition: transform 0.3s;
-        }
-
-        header h1 a:hover {
-            transform: scale(1.05);
-        }
-
-        .profile-container {
-            margin-top: 20px;
-        }
-
-        .profile-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 40px 50px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-
-        .profile-container:hover {
-            transform: translateY(-5px);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 35px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 2rem;
-        }
-
-        .avatar-preview {
-            display: block;
-            margin: 0 auto 30px auto;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #667eea;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s;
-        }
-
-        .avatar-preview:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
-        }
-
-        form label {
-            display: block;
-            margin-top: 20px;
-            font-weight: 600;
-            color: #2d3436;
-            font-size: 0.95rem;
-        }
-
-        form input[type="text"],
-        form input[type="email"],
-        form input[type="url"],
-        form textarea,
-        form input[type="file"],
-        #id_avatar,
-        #id_about,
-        #id_facebook,
-        #id_twitter,
-        #id_instagram,
-        #id_linkedin,
-        #id_github,
-        #id_leetcode,
-        #id_telegram,
-        #id_email {
-            width: 100%;
-            padding: 14px 18px;
-            margin-top: 8px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 15px;
-            color: #222;
-            box-sizing: border-box;
-            transition: all 0.3s;
-            outline: none;
-            font-family: inherit;
-        }
-
-        form input[type="text"]:focus,
-        form input[type="email"]:focus,
-        form input[type="url"]:focus,
-        form textarea:focus,
-        #id_avatar:focus,
-        #id_about:focus,
-        #id_facebook:focus,
-        #id_twitter:focus,
-        #id_instagram:focus,
-        #id_linkedin:focus,
-        #id_github:focus,
-        #id_leetcode:focus,
-        #id_telegram:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        form input[type="email"][readonly],
-        #id_email[readonly] {
-            background: #f8f9fa;
-            cursor: not-allowed;
-        }
-
-        #id_avatar {
-            padding: 10px;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-            font-family: inherit;
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            padding: 16px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 30px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .action-link {
-            flex: 1 1 30%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
-            text-align: center;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .action-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 600;
-            border-left: 4px solid #28a745;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 600;
-            border-left: 4px solid #dc3545;
-        }
-
-        @media (max-width: 768px) {
-            .profile-container {
-                padding: 30px 25px;
-            }
-
-            .action-link {
-                flex: 1 1 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 </head>
 <body>
 <header>
     <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
 </header>
-<div style="padding: 20px;">
+<div class="page-wrapper">
     <div class="profile-container">
         <h2>👤 Profilni Tahrirlash</h2>
 
@@ -286,7 +46,7 @@
             {% endif %}
 
             <label for="id_email">📧 Email:</label>
-            <input type="email" name="email_display" id="id_email" value="{{ user.email }}" readonly style="background: #f8f9fa; cursor: not-allowed;" />
+            <input type="email" name="email_display" id="id_email" value="{{ user.email }}" readonly />
 
             <label for="id_facebook">📘 Facebook URL:</label>
             {{ form.facebook }}
@@ -330,22 +90,8 @@
                 <div class="error-message">{{ form.telegram.errors }}</div>
             {% endif %}
 
-            <button type="submit">💾 Saqlash</button>
+            <button type="submit" class="submit-btn">💾 Saqlash</button>
         </form>
-
-        <script>
-            // Avatar preview yangilash
-            document.getElementById('id_avatar').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('avatar-preview').src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        </script>
 
         <div class="buttons-container">
             <a href="{% url 'post_create' %}" class="action-link">➕ Post yozish</a>
@@ -354,5 +100,6 @@
         </div>
     </div>
 </div>
+<script src="{% static 'js/profile.js' %}"></script>
 </body>
 </html>

@@ -1,0 +1,208 @@
+/* Authentication Pages (Login & Register) Styles */
+
+.content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px);
+    padding: 20px;
+}
+
+.login-container,
+.register-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 30px;
+    color: #2d3436;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.logo {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s;
+    outline: none;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.social-login {
+    margin-top: 25px;
+}
+
+.social-login a {
+    text-decoration: none;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.social-login button {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.social-login button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.social-login button.google {
+    background: #4285f4;
+}
+
+.social-login button.github {
+    background: #333;
+}
+
+.social-login img {
+    width: 20px;
+    height: 20px;
+}
+
+.or-divider {
+    margin: 25px 0;
+    color: #636e72;
+    position: relative;
+    font-weight: 600;
+}
+
+.or-divider::before,
+.or-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.or-divider::before {
+    left: 0;
+}
+
+.or-divider::after {
+    right: 0;
+}
+
+.messages {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 10px;
+    text-align: left;
+    border-left: 4px solid #ffc107;
+    list-style: none;
+}
+
+.messages.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left-color: #dc3545;
+}
+
+.messages.success {
+    background: #d4edda;
+    color: #155724;
+    border-left-color: #28a745;
+}
+
+.register-link,
+.login-link {
+    margin-top: 20px;
+    color: #636e72;
+}
+
+.register-link a,
+.login-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link a:hover,
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.form-errors {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.form-errors ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+@media (max-width: 768px) {
+    .login-container,
+    .register-container {
+        padding: 30px 25px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}

@@ -5,356 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mening Postlarim - devSphere</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        /* Header Styles */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-
-        header h1 a {
-            text-decoration: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            transition: transform 0.3s;
-        }
-
-        header h1 a:hover {
-            transform: scale(1.05);
-        }
-
-        .container {
-            margin-top: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-        }
-
-        h1 {
-            color: #2d3436;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        h1 span {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 25px;
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #667eea;
-            border-radius: 12px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
-        }
-
-        .back-link:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .post-item {
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            background: white;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .post-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border-color: #667eea;
-        }
-
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .post-title {
-            font-size: 1.4rem;
-            color: #2d3436;
-            margin: 0;
-            flex: 1;
-            font-weight: 600;
-        }
-
-        .post-title a {
-            text-decoration: none;
-            color: inherit;
-            transition: color 0.3s;
-        }
-
-        .post-title a:hover {
-            color: #667eea;
-        }
-
-        .post-status {
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .status-active {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
-        }
-
-        .status-inactive {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
-        }
-
-        .post-meta {
-            color: #636e72;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .post-meta strong {
-            color: #2d3436;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-edit {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-        }
-
-        .btn-edit:hover {
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
-        }
-
-        .btn-delete {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-        }
-
-        .btn-delete:hover {
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
-        }
-
-        .btn-view {
-            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-            color: white;
-        }
-
-        .btn-view:hover {
-            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
-        }
-
-        .btn-new {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-        }
-
-        .btn-new:hover {
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 40px;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .page-link {
-            padding: 10px 16px;
-            border-radius: 10px;
-            text-decoration: none;
-            background: white;
-            color: #333;
-            transition: all 0.3s;
-            font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .page-link:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .page-link.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .dots {
-            padding: 10px 12px;
-            color: #999;
-            cursor: default;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #636e72;
-        }
-
-        .empty-state h2 {
-            color: #2d3436;
-            margin-bottom: 15px;
-            font-size: 2rem;
-        }
-
-        .empty-state p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-
-        .tag-badge {
-            background: #e8f4f8;
-            color: #2c3e50;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            margin-right: 6px;
-            margin-bottom: 6px;
-            display: inline-block;
-            border: 1px solid #ddd;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 25px 20px;
-            }
-
-            .post-header {
-                flex-direction: column;
-            }
-
-            .post-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/posts_list.css' %}">
 </head>
 <body>
 <header>
     <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
 </header>
-<div style="padding: 20px;">
-    <div class="container">
+<div class="page-wrapper">
+    <div class="posts-container">
         <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
-        <h1>
+            <h1>
             <span>📄 Mening Postlarim</span>
-            <a href="{% url 'post_create' %}" class="btn btn-new">➕ Yangi Post</a>
+            <a href="{% url 'post_create' %}" class="btn-new">➕ Yangi Post</a>
         </h1>
 
         {% if messages %}
-            <ul style="list-style: none; padding: 0; margin-bottom: 20px;">
+            <ul class="messages">
                 {% for message in messages %}
-                    <li style="padding: 12px; margin-bottom: 10px; border-radius: 10px; 
-                        {% if message.tags == 'success' %}background: #d4edda; color: #155724; border-left: 4px solid #28a745;
-                        {% elif message.tags == 'error' %}background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545;
-                        {% else %}background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8;{% endif %}">
-                        {{ message }}
-                    </li>
+                    <li class="{{ message.tags }}">{{ message }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -366,7 +35,7 @@
                         <h3 class="post-title">
                             <a href="{% url 'post' post.slug %}">{{ post.title }}</a>
                         </h3>
-                        <span class="post-status {% if post.is_active %}status-active{% else %}status-inactive{% endif %}">
+                        <span class="post-status {% if post.is_active %}active{% else %}inactive{% endif %}">
                             {% if post.is_active %}✅ Faol{% else %}⏳ Ko'rib chiqilmoqda{% endif %}
                         </span>
                     </div>
@@ -385,9 +54,9 @@
                         </div>
                     {% endif %}
                     <div class="post-actions">
-                        <a href="{% url 'post' post.slug %}" class="btn btn-view">👁️ Ko'rish</a>
-                        <a href="{% url 'post_edit' post.slug %}" class="btn btn-edit">✏️ Tahrirlash</a>
-                        <a href="{% url 'post_delete' post.slug %}" class="btn btn-delete" 
+                        <a href="{% url 'post' post.slug %}" class="action-btn btn-view">👁️ Ko'rish</a>
+                        <a href="{% url 'post_edit' post.slug %}" class="action-btn btn-edit">✏️ Tahrirlash</a>
+                        <a href="{% url 'post_delete' post.slug %}" class="action-btn btn-delete" 
                            onclick="return confirm('Haqiqatan ham bu postni o\'chirmoqchimisiz?')">🗑️ O'chirish</a>
                     </div>
                 </div>
@@ -417,10 +86,10 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="empty-state">
+            <div class="empty-message">
                 <h2>📝 Hozircha postlar yo'q</h2>
                 <p>Sizning postlaringiz bu yerda ko'rinadi</p>
-                <a href="{% url 'post_create' %}" class="btn btn-new" style="display: inline-block;">➕ Birinchi postni yozish</a>
+                <a href="{% url 'post_create' %}" class="btn-new empty-action-btn">➕ Birinchi postni yozish</a>
             </div>
         {% endif %}
     </div>
