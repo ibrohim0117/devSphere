@@ -15,7 +15,13 @@
 <div class="page-wrapper">
     <div class="posts-container">
         <a href="{% url 'home' %}" class="back-link">← Bosh sahifaga qaytish</a>
-        <h1>🔧 Admin Panel - Barcha Postlar</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <h1>🔧 Admin Panel - Barcha Postlar</h1>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="{% url 'category_list' %}" class="action-btn btn-edit" style="padding: 10px 20px; text-decoration: none; display: inline-block;">📂 Kategoriyalar</a>
+                <a href="{% url 'tag_list' %}" class="action-btn btn-edit" style="padding: 10px 20px; text-decoration: none; display: inline-block;">🏷️ Tag'lar</a>
+            </div>
+        </div>
 
         {% if messages %}
             <ul class="messages">

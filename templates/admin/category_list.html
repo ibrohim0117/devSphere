@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategoriyalar Boshqaruvi - devSphere</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/posts_list.css' %}">
+</head>
+<body>
+<header>
+    <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+</header>
+<div class="page-wrapper">
+    <div class="posts-container">
+        <a href="{% url 'admin_posts' %}" class="back-link">← Admin Panelga qaytish</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>📂 Kategoriyalar Boshqaruvi</h1>
+            <a href="{% url 'category_create' %}" class="action-btn btn-edit" style="padding: 12px 24px; text-decoration: none; display: inline-block;">➕ Yangi Kategoriya</a>
+        </div>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3>{{ total_categories }}</h3>
+                <p>📊 Jami kategoriyalar</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <form method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="search">🔍 Qidirish:</label>
+                    <input type="text" name="search" id="search" value="{{ search }}" placeholder="Kategoriya nomi bo'yicha...">
+                </div>
+                <button type="submit" class="filter-group button">🔍 Qidirish</button>
+                <a href="{% url 'category_list' %}" class="filter-group action-btn btn-clear">🔄 Tozalash</a>
+            </form>
+        </div>
+
+        {% if categories %}
+            <table class="posts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nomi</th>
+                        <th>Slug</th>
+                        <th>📅 Yaratilgan</th>
+                        <th>📝 Postlar soni</th>
+                        <th>Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td><strong>#{{ category.id }}</strong></td>
+                            <td><strong>{{ category.name }}</strong></td>
+                            <td><code>{{ category.slug }}</code></td>
+                            <td>{{ category.created_at|date:"d.m.Y H:i" }}</td>
+                            <td>{{ category.posts.count }} ta</td>
+                            <td>
+                                <div class="post-actions">
+                                    <a href="{% url 'category_edit' category.pk %}" class="action-btn btn-edit" title="Tahrirlash">✏️</a>
+                                    <a href="{% url 'category_delete' category.pk %}" 
+                                       class="action-btn btn-delete" 
+                                       title="O'chirish"
+                                       onclick="return confirm('{{ category.name }} kategoriyasini o\'chirmoqchimisiz? Bu kategoriyaga bog\'liq barcha postlar ham o\'chiriladi!')">
+                                        🗑️
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if search %}&search={{ search }}{% endif %}" class="page-link">&laquo;</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}" class="page-link">‹</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if num == page_obj.number %}
+                        <a href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}" class="page-link active">{{ num }}</a>
+                    {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                        <a href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}" class="page-link">{{ num }}</a>
+                    {% elif num == 1 or num == page_obj.paginator.num_pages %}
+                        <a href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}" class="page-link">{{ num }}</a>
+                    {% elif num == page_obj.number|add:-3 or num == page_obj.number|add:3 %}
+                        <span class="dots">...</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}" class="page-link">›</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}" class="page-link">&raquo;</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="empty-message">
+                <h2>📂 Kategoriyalar topilmadi</h2>
+                <p>{% if search %}Qidiruv natijasiga mos kategoriyalar topilmadi{% else %}Hali kategoriya yaratilmagan{% endif %}</p>
+                <a href="{% url 'category_create' %}" class="action-btn btn-edit" style="margin-top: 20px; padding: 12px 24px; text-decoration: none; display: inline-block;">➕ Birinchi kategoriyani yaratish</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect
 
 from .models import Post, Category, Tag, Reaction, Comment
 from .filter_manager import FilterManager
-from .forms import PostCreateForm, CommentForm
+from .forms import PostCreateForm, CommentForm, CategoryForm, TagForm
 from .utils import get_client_ip
 
 
@@ -341,6 +341,170 @@ class ReplyCommentView(LoginRequiredMixin, View):
     
     def get(self, request, post_slug, comment_id):
         return redirect('post', slug=post_slug)
+
+
+# ==================== Category Management Views ====================
+
+class CategoryListView(UserPassesTestMixin, ListView):
+    """Category ro'yxatini ko'rsatish (Admin uchun)"""
+    model = Category
+    template_name = 'admin/category_list.html'
+    context_object_name = 'categories'
+    paginate_by = 20
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def get_queryset(self):
+        queryset = Category.objects.all().order_by('-created_at')
+        # Search qo'shish
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('search', '')
+        context['total_categories'] = Category.objects.count()
+        return context
+
+
+class CategoryCreateView(UserPassesTestMixin, CreateView):
+    """Category yaratish (Admin uchun)"""
+    model = Category
+    form_class = CategoryForm
+    template_name = 'admin/category_form.html'
+    success_url = reverse_lazy('category_list')
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, f"✅ '{form.instance.name}' kategoriyasi muvaffaqiyatli yaratildi!")
+        return super().form_valid(form)
+
+
+class CategoryUpdateView(UserPassesTestMixin, UpdateView):
+    """Category tahrirlash (Admin uchun)"""
+    model = Category
+    form_class = CategoryForm
+    template_name = 'admin/category_form.html'
+    success_url = reverse_lazy('category_list')
+    pk_url_kwarg = 'pk'
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, f"✅ '{form.instance.name}' kategoriyasi muvaffaqiyatli yangilandi!")
+        return super().form_valid(form)
+
+
+class CategoryDeleteView(UserPassesTestMixin, DeleteView):
+    """Category o'chirish (Admin uchun)"""
+    model = Category
+    template_name = 'admin/category_confirm_delete.html'
+    success_url = reverse_lazy('category_list')
+    pk_url_kwarg = 'pk'
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def delete(self, request, *args, **kwargs):
+        category = self.get_object()
+        category_name = category.name
+        messages.success(self.request, f"✅ '{category_name}' kategoriyasi muvaffaqiyatli o'chirildi!")
+        return super().delete(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category = self.get_object()
+        # Kategoriyaga bog'liq postlar sonini hisoblash
+        context['posts_count'] = category.posts.count()
+        return context
+
+
+# ==================== Tag Management Views ====================
+
+class TagListView(UserPassesTestMixin, ListView):
+    """Tag ro'yxatini ko'rsatish (Admin uchun)"""
+    model = Tag
+    template_name = 'admin/tag_list.html'
+    context_object_name = 'tags'
+    paginate_by = 20
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def get_queryset(self):
+        queryset = Tag.objects.all().order_by('-created_at')
+        # Search qo'shish
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = self.request.GET.get('search', '')
+        context['total_tags'] = Tag.objects.count()
+        return context
+
+
+class TagCreateView(UserPassesTestMixin, CreateView):
+    """Tag yaratish (Admin uchun)"""
+    model = Tag
+    form_class = TagForm
+    template_name = 'admin/tag_form.html'
+    success_url = reverse_lazy('tag_list')
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, f"✅ '{form.instance.name}' tag'i muvaffaqiyatli yaratildi!")
+        return super().form_valid(form)
+
+
+class TagUpdateView(UserPassesTestMixin, UpdateView):
+    """Tag tahrirlash (Admin uchun)"""
+    model = Tag
+    form_class = TagForm
+    template_name = 'admin/tag_form.html'
+    success_url = reverse_lazy('tag_list')
+    pk_url_kwarg = 'pk'
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, f"✅ '{form.instance.name}' tag'i muvaffaqiyatli yangilandi!")
+        return super().form_valid(form)
+
+
+class TagDeleteView(UserPassesTestMixin, DeleteView):
+    """Tag o'chirish (Admin uchun)"""
+    model = Tag
+    template_name = 'admin/tag_confirm_delete.html'
+    success_url = reverse_lazy('tag_list')
+    pk_url_kwarg = 'pk'
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_superuser
+
+    def delete(self, request, *args, **kwargs):
+        tag = self.get_object()
+        tag_name = tag.name
+        messages.success(self.request, f"✅ '{tag_name}' tag'i muvaffaqiyatli o'chirildi!")
+        return super().delete(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = self.get_object()
+        # Tag'ga bog'liq postlar sonini hisoblash
+        context['posts_count'] = tag.posts.count()
+        return context
 
 
 

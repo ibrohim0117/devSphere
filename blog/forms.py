@@ -1,6 +1,6 @@
 from django import forms
 from ckeditor.widgets import CKEditorWidget
-from .models import Post, Comment
+from .models import Post, Comment, Category, Tag
 
 
 class PostCreateForm(forms.ModelForm):
@@ -68,4 +68,47 @@ class CommentForm(forms.ModelForm):
             raise forms.ValidationError('Izoh 1000 ta belgidan oshmasligi kerak')
         return content.strip()
 
+
+class CategoryForm(forms.ModelForm):
+    """Category yaratish va tahrirlash uchun form"""
+    class Meta:
+        model = Category
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Kategoriya nomi (masalan: Dasturlash, Dizayn)',
+                'required': True
+            }),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name or len(name.strip()) < 2:
+            raise forms.ValidationError('Kategoriya nomi kamida 2 ta belgidan iborat bo\'lishi kerak')
+        if len(name.strip()) > 50:
+            raise forms.ValidationError('Kategoriya nomi 50 ta belgidan oshmasligi kerak')
+        return name.strip()
+
+
+class TagForm(forms.ModelForm):
+    """Tag yaratish va tahrirlash uchun form"""
+    class Meta:
+        model = Tag
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Tag nomi (masalan: Python, JavaScript)',
+                'required': True
+            }),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name or len(name.strip()) < 2:
+            raise forms.ValidationError('Tag nomi kamida 2 ta belgidan iborat bo\'lishi kerak')
+        if len(name.strip()) > 50:
+            raise forms.ValidationError('Tag nomi 50 ta belgidan oshmasligi kerak')
+        return name.strip()
 

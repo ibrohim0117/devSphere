@@ -20,7 +20,14 @@ class Category(BaseCreatedModel):
     slug = models.SlugField(max_length=50, unique=True, editable=False)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug or self.slug != slugify(self.name):
+            self.slug = slugify(self.name)
+            # Agar slug allaqachon mavjud bo'lsa, raqam qo'shish
+            original_slug = self.slug
+            counter = 1
+            while Category.objects.filter(slug=self.slug).exclude(pk=self.pk if self.pk else None).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
         super().save(*args, **kwargs)
 
     def __str__(self):

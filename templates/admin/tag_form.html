@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if object %}Tag'ni Tahrirlash{% else %}Yangi Tag{% endif %} - devSphere</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+</head>
+<body>
+<header>
+    <h1><a href="{% url 'home' %}">🚀 devSphere</a></h1>
+</header>
+<div class="content-wrapper">
+    <div class="form-container">
+        <a href="{% url 'tag_list' %}" class="back-link">← Tag'lar ro'yxatiga qaytish</a>
+        
+        <h1>{% if object %}✏️ Tag'ni Tahrirlash{% else %}➕ Yangi Tag Yaratish{% endif %}</h1>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="form-errors">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">🏷️ Tag nomi:</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="field-errors">
+                        {% for error in form.name.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <small class="form-text">Tag nomini kiriting (masalan: Python, JavaScript, React)</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    {% if object %}💾 Saqlash{% else %}➕ Yaratish{% endif %}
+                </button>
+                <a href="{% url 'tag_list' %}" class="btn btn-secondary">❌ Bekor qilish</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
