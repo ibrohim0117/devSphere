@@ -84,6 +84,11 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+
+# Logs
+logs/*.log
+logs/*.log.*
+!logs/.gitkeep
 instance/
 .webassets-cache
 .scrapy

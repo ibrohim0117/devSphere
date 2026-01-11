@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-placeholder")
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -40,25 +40,26 @@ INSTALLED_APPS = [
 csrf_origins = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins.split(",") if origin.strip()] if csrf_origins else []
 
-# Ngrok support - avtomatik ngrok URL'ni olish (test uchun)
-try:
-    import urllib.request
-    import json as json_module
-    ngrok_url_obj = urllib.request.urlopen("http://127.0.0.1:4040/api/tunnels", timeout=2)
-    ngrok_data = json_module.loads(ngrok_url_obj.read().decode())
-    if ngrok_data.get("tunnels"):
-        ngrok_url = ngrok_data["tunnels"][0].get("public_url")
-        if ngrok_url and ngrok_url.startswith("https://"):
-            # Ngrok URL'ni CSRF_TRUSTED_ORIGINS ga qo'shish
-            if ngrok_url not in CSRF_TRUSTED_ORIGINS:
-                CSRF_TRUSTED_ORIGINS.append(ngrok_url)
-                # Ngrok domain'ini ALLOWED_HOSTS ga ham qo'shish (agar "*" bo'lmasa)
+# Ngrok support - avtomatik ngrok URL'ni olish (faqat DEBUG=True bo'lganda)
+if DEBUG:
+    try:
+        import urllib.request
+        import json as json_module
+        ngrok_url_obj = urllib.request.urlopen("http://127.0.0.1:4040/api/tunnels", timeout=2)
+        ngrok_data = json_module.loads(ngrok_url_obj.read().decode())
+        if ngrok_data.get("tunnels"):
+            ngrok_url = ngrok_data["tunnels"][0].get("public_url")
+            if ngrok_url and ngrok_url.startswith("https://"):
+                # Ngrok URL'ni CSRF_TRUSTED_ORIGINS ga qo'shish
+                if ngrok_url not in CSRF_TRUSTED_ORIGINS:
+                    CSRF_TRUSTED_ORIGINS.append(ngrok_url)
+                # Ngrok domain'ini ALLOWED_HOSTS ga ham qo'shish
                 ngrok_domain = ngrok_url.replace("https://", "").replace("http://", "")
-                if "*" not in ALLOWED_HOSTS and ngrok_domain not in ALLOWED_HOSTS:
+                if ngrok_domain not in ALLOWED_HOSTS:
                     ALLOWED_HOSTS.append(ngrok_domain)
-except:
-    # Ngrok ishlamayotgan bo'lsa, xato bermaslik
-    pass
+    except:
+        # Ngrok ishlamayotgan bo'lsa, xato bermaslik
+        pass
 
 # AUTH
 AUTH_USER_MODEL = "users.User"
@@ -226,5 +227,95 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath'
         ]),
+    },
+}
+
+# ==================== PRODUCTION SECURITY SETTINGS ====================
+
+# Production uchun security sozlamalari (faqat DEBUG=False bo'lganda)
+if not DEBUG:
+    # SSL/TLS Security
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True") == "True"
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Cookie Security
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    
+    # HSTS (HTTP Strict Transport Security)
+    SECURE_HSTS_SECONDS = 31536000  # 1 yil
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # XSS Protection
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    
+    # Frame Options
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # Referrer Policy
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# ==================== LOGGING CONFIGURATION ====================
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'blog': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'users': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
